@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
 
 #ifndef P_ARRAY_H
 #define P_ARRAY_H
