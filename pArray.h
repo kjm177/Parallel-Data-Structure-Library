@@ -30,16 +30,13 @@ Overloading '[]' operator for array element access
 */
     T &operator[] (int index)
     {
-
         if(index >= 0 && index < pArraySize)
             return myArray[index];
         else
         {
             cout<<"Array index out of bound!"<<endl;
             throw index;
-
         }
-
     }
 
 /**
@@ -87,7 +84,6 @@ Returns element at position 'index' of the array
         {
             cout<<"Array index out of bound!"<<endl;
             throw index;
-
         }
     }
 
