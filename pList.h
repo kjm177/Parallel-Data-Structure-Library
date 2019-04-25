@@ -18,12 +18,15 @@ struct pListNode
     pListNode(T element) : data(element), next(NULL), prev(NULL){}
 };
 
+
+
 template <typename T>
 class pList
 {
     size_t pListSize;
     pListNode<T> *pListHead;
     pListNode<T> *pListTail;
+    pListNode<T> *dummy;
     omp_lock_t tailLock;
     omp_lock_t headLock;
 
@@ -37,26 +40,27 @@ Constructor for generic doubly linked list type T
         pListSize = 0;
         pListHead = NULL;
         pListTail = NULL;
+        dummy = new pListNode(-99999999);
         omp_init_lock(&headLock);
         omp_init_lock(&tailLock);
     }
 
-    bool lockHead()
+    void lockHead()
     {
         omp_set_lock(&headLock);
     }
 
-    bool freeHead()
+    void freeHead()
     {
         omp_unset_lock(&headLock);
     }
 
-    bool lockTail()
+    void lockTail()
     {
         omp_set_lock(&tailLock);
     }
 
-    bool freeTail()
+    void freeTail()
     {
         omp_unset_lock(&tailLock);
     }
@@ -79,8 +83,12 @@ Constructor for generic doubly linked list type T
         pListNode<T>* p = new pListNode<T>(element);
 
         lockHead();
+        bool flag = false;
         if(pListSize < 2)
+        {
+            flag = true;
             lockTail();
+        }
         p->next = pListHead;
         if(pListHead)
             pListHead->prev = p;
@@ -89,7 +97,8 @@ Constructor for generic doubly linked list type T
         pListHead = p;
         pListSize++;
         freeHead();
-        freeTail();
+        if(flag)
+            freeTail();
     }
 
     void pushBack(T element)
@@ -98,8 +107,12 @@ Constructor for generic doubly linked list type T
         pListNode<T>* p = new pListNode<T>(element);
 
         lockTail();
+        bool flag = false;
         if(pListSize < 2)
+        {
             lockHead();
+            flag = true;
+        }
         p->prev = pListTail;
 
         if(pListTail)
@@ -109,7 +122,8 @@ Constructor for generic doubly linked list type T
         pListTail = p;
         pListSize++;
         freeTail();
-        freeHead();
+        if(flag)
+            freeHead();
     }
 
     void popFront()
@@ -118,6 +132,15 @@ Constructor for generic doubly linked list type T
         {
             cout<<"ERROR! List is empty!"<<endl;
         }
+
+        lockHead();
+        bool flag = false;
+        if(pListSize < 2)
+        {
+            flag = true;
+            lockTail();
+        }
+
         pListNode<T>* p = pListHead;
         pListHead = pListHead->next;
         if(pListHead)
@@ -128,6 +151,11 @@ Constructor for generic doubly linked list type T
         free(p);
 
         pListSize--;
+
+
+        freeHead();
+        if(flag)
+            freeTail();
     }
 
     void popBack()
@@ -136,6 +164,15 @@ Constructor for generic doubly linked list type T
         {
             cout<<"ERROR! List is empty!"<<endl;
         }
+
+        lockTail();
+        bool flag = false;
+        if(pListSize < 2)
+        {
+            lockHead();
+            flag = true;
+        }
+
         pListNode<T>* p = pListTail;
         pListTail = pListTail->prev;
         if(pListTail)
@@ -145,6 +182,9 @@ Constructor for generic doubly linked list type T
 
         free(p);
         pListSize--;
+        freeTail();
+        if(flag)
+            freeHead();
     }
 
     T front()
@@ -152,7 +192,7 @@ Constructor for generic doubly linked list type T
         if(pListSize == 0)
         {
             cout<<"List is empty"<<endl;
-            throw 0;
+            return dummy->data;
         }
         return pListHead->data;
     }
@@ -162,7 +202,7 @@ Constructor for generic doubly linked list type T
         if(pListSize == 0)
         {
             cout<<"List is empty"<<endl;
-            throw 0;
+            return dummy->data;
         }
         return pListTail->data;
     }
@@ -172,7 +212,7 @@ Constructor for generic doubly linked list type T
         if(pListSize == 0 || index < 0 || index >= pListSize)
         {
             cout<<"Index out of bounds"<<endl;
-            throw 0;
+            return dummy->data;
         }
         pListNode<T>* it = pListHead;
         while(index)

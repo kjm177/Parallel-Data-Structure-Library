@@ -82,6 +82,7 @@ void testList(struct testCase* t)
     pList <int> dll;
     dll.printList();
 
+#pragma omp parallel for num_threads(5)
     for(int i = 1 ; i < t->numOfOperations ; i++)
     {
         cout<<i<<" ";
