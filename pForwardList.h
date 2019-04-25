@@ -1,5 +1,6 @@
 #include <iostream>
 #include <set>
+#include <omp.h>
 
 #ifndef pForwardList_h
 #define pForwardList_h
