@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <unordered_set>
+#include <omp.h>
+
 using namespace std;
 
 template <typename T>
@@ -22,6 +24,8 @@ class pList
     size_t pListSize;
     pListNode<T> *pListHead;
     pListNode<T> *pListTail;
+    omp_lock_t tailLock;
+    omp_lock_t headLock;
 
 public:
 
@@ -33,6 +37,28 @@ Constructor for generic doubly linked list type T
         pListSize = 0;
         pListHead = NULL;
         pListTail = NULL;
+        omp_init_lock(&headLock);
+        omp_init_lock(&tailLock);
+    }
+
+    bool lockHead()
+    {
+        omp_set_lock(&headLock);
+    }
+
+    bool freeHead()
+    {
+        omp_unset_lock(&headLock);
+    }
+
+    bool lockTail()
+    {
+        omp_set_lock(&tailLock);
+    }
+
+    bool freeTail()
+    {
+        omp_unset_lock(&tailLock);
     }
 
     bool isEmpty()
@@ -47,11 +73,14 @@ Constructor for generic doubly linked list type T
         return pListSize;
     }
 
-    pushFront(T element)
+    void pushFront(T element)
     {
         cout<<"Pushing new element at front "<<endl;
         pListNode<T>* p = new pListNode<T>(element);
 
+        lockHead();
+        if(pListSize < 2)
+            lockTail();
         p->next = pListHead;
         if(pListHead)
             pListHead->prev = p;
@@ -59,12 +88,18 @@ Constructor for generic doubly linked list type T
             pListTail = p;
         pListHead = p;
         pListSize++;
+        freeHead();
+        freeTail();
     }
 
-    pushBack(T element)
+    void pushBack(T element)
     {
         cout<<"Pushing new element at back "<<endl;
         pListNode<T>* p = new pListNode<T>(element);
+
+        lockTail();
+        if(pListSize < 2)
+            lockHead();
         p->prev = pListTail;
 
         if(pListTail)
@@ -73,9 +108,11 @@ Constructor for generic doubly linked list type T
             pListHead = p;
         pListTail = p;
         pListSize++;
+        freeTail();
+        freeHead();
     }
 
-    popFront()
+    void popFront()
     {
         if(pListSize == 0)
         {
@@ -93,7 +130,7 @@ Constructor for generic doubly linked list type T
         pListSize--;
     }
 
-    popBack()
+    void popBack()
     {
         if(pListSize == 0)
         {

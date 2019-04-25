@@ -1,36 +1,40 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <omp.h>
+#include "pForwardList.h"
+#include "pList.h"
 #include "pArray.h"
+#include "utility.h"
 
 using namespace std;
+
 
 
 int main(int argc, char* argv[])
 {
     printf("Parallel data structure simulator has begun!\n");
+    string inputFileName = "test_list_100.txt";
+
+    struct testCase* t = readInput(inputFileName);
 
 
-    pArray < int > a(10);
+    cout<<"DS: "<<t->dataStructure<<endl;
+    cout<<"NumOfOperations: "<<t->numOfOperations<<endl;
+    for(int i = 0 ; i < t->numOfOperations ; i++)
+    {
+        for(int j = 0 ; j < (t->operations[i]).size() ; j++)
+            cout<<t->operations[i][j]<<" ";
+            cout<<endl;
+    }
 
-
-    int temp = -1;
-    for(int i = 0 ; i < 10 ; i++, temp *= -1)
-        a[i] = i*temp;
-
-    a.printArray();
-
-
-    a.sortArray(true);
-    a.printArray();
-
-
-    a.sortArray(false);
-    a.printArray();
-    //a.reverseArray();
-    //a.printArray();
-
-//    a.~pArray();
-
-
+    if(t->dataStructure == 1)
+        testArray(t);
+    else if(t->dataStructure == 2)
+        testForwardList(t);
+    else
+        testList(t);
 
 
     return 0;

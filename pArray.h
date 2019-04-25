@@ -2,6 +2,8 @@
 #define P_ARRAY_H
 
 #include <iostream>
+#include <omp.h>
+
 using namespace std;
 
 
@@ -21,6 +23,7 @@ Constructor for generic array type T, and size s
 */
     pArray(size_t s)
     {
+        cout<<"Constructor: ";
         pArraySize = s;
         myArray = new T [pArraySize];
     }
@@ -30,6 +33,7 @@ Overloading '[]' operator for array element access
 */
     T &operator[] (int index)
     {
+        cout<<"[]. ";
         if(index >= 0 && index < pArraySize)
             return myArray[index];
         else
@@ -44,6 +48,7 @@ Returns array size
 */
     int arraySize()
     {
+        cout<<"ArraySize. ";
         return pArraySize;
     }
 /**
@@ -51,6 +56,7 @@ Returns true if array is empty
 */
     bool isEmpty()
     {
+        cout<<"IsEmpty. ";
         if(pArraySize == 0)
             return true;
         return false;
@@ -60,6 +66,7 @@ Returns element at the front of the array
 */
     T front()
     {
+        cout<<"Front. ";
         if(pArraySize == 0)
             cout<<"Array is empty!"<<endl;
         return myArray[0];
@@ -69,8 +76,9 @@ Returns element at the back of the array
 */
     T back()
     {
+        cout<<"Back. ";
         if(pArraySize == 0)
-            cout<<"Array is empty!";
+            cout<<"ERROR! Array is empty!";
         return myArray[pArraySize-1];
     }
 /**
@@ -78,6 +86,7 @@ Returns element at position 'index' of the array
 */
     T at(int index)
     {
+        cout<<"At. ";
         if(index >= 0 && index < pArraySize)
             return myArray[index];
         else
@@ -89,12 +98,14 @@ Returns element at position 'index' of the array
 
     void fillArray(T element)
     {
+        cout<<"Filling array: ";
         for(int i = 0 ; i < pArraySize ; i++)
             myArray[i] = element;
     }
 
     void sortArray(bool ascending)
     {
+        cout<<"Sorting array: ";
         T temp;
         if(ascending)
         {
@@ -131,6 +142,7 @@ Returns element at position 'index' of the array
 
     void reverseArray()
     {
+        cout<<"Reversing array: ";
         int lower = 0;
         int upper = pArraySize - 1;
         T temp;
