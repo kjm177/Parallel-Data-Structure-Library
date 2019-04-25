@@ -145,14 +145,6 @@ Constructor for generic doubly linked list type T
             cout<<"ERROR! List is empty!"<<endl;
         }
 
-        lockHead();
-        bool flag = false;
-        if(pListSize < 2)
-        {
-            flag = true;
-            lockTail();
-        }
-
         pListNode<T>* p = pListHead;
         pListHead = pListHead->next;
         if(pListHead)
@@ -163,11 +155,6 @@ Constructor for generic doubly linked list type T
         free(p);
 
         pListSize--;
-
-
-        freeHead();
-        if(flag)
-            freeTail();
     }
 
     void popBack()
@@ -175,14 +162,6 @@ Constructor for generic doubly linked list type T
         if(pListSize == 0)
         {
             cout<<"ERROR! List is empty!"<<endl;
-        }
-
-        lockTail();
-        bool flag = false;
-        if(pListSize < 2)
-        {
-            lockHead();
-            flag = true;
         }
 
         pListNode<T>* p = pListTail;
@@ -194,9 +173,6 @@ Constructor for generic doubly linked list type T
 
         free(p);
         pListSize--;
-        freeTail();
-        if(flag)
-            freeHead();
     }
 
     T front()
