@@ -39,7 +39,7 @@ Constructor for generic doubly linked list type T
         pListSize = 0;
         pListHead = NULL;
         pListTail = NULL;
-        dummy = new pListNode(-99999999);
+        dummy = new pListNode<T>(-99999999);
     }
 
     void lockNode(pListNode<T> *node)
@@ -57,7 +57,7 @@ Constructor for generic doubly linked list type T
     bool isEmpty()
     {
         lockNode(pListHead);
-        if(pListHead == NULL
+        if(pListHead == NULL)
         {
             unLockNode(pListHead);
             return true;
@@ -104,7 +104,7 @@ Constructor for generic doubly linked list type T
                 pListTail = p;
             pListHead = p;
             pListSize++;
-            unLockNode(pListHead->next)
+            unLockNode(pListHead->next);
             if(flag)
                 unLockNode(pListTail);
         }
