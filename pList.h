@@ -12,10 +12,11 @@ template <typename T>
 struct pListNode
 {
     T data;
+    omp_lock_t nodeLock;
     pListNode* next;
     pListNode* prev;
 
-    pListNode(T element) : data(element), next(NULL), prev(NULL){}
+    pListNode(T element) : data(element), next(NULL), prev(NULL), omp_init_lock(&nodeLock){}
 };
 
 
@@ -27,8 +28,6 @@ class pList
     pListNode<T> *pListHead;
     pListNode<T> *pListTail;
     pListNode<T> *dummy;
-    omp_lock_t tailLock;
-    omp_lock_t headLock;
 
 public:
 
@@ -41,89 +40,102 @@ Constructor for generic doubly linked list type T
         pListHead = NULL;
         pListTail = NULL;
         dummy = new pListNode(-99999999);
-        omp_init_lock(&headLock);
-        omp_init_lock(&tailLock);
     }
 
-    void lockHead()
+    void lockNode(pListNode<T> *node)
     {
-        omp_set_lock(&headLock);
+        if(node)
+            omp_set_lock(&(node->nodeLock));
     }
 
-    void freeHead()
+    void unLockNode(pListNode<T> *node)
     {
-        omp_unset_lock(&headLock);
-    }
-
-    void lockTail()
-    {
-        omp_set_lock(&tailLock);
-    }
-
-    void freeTail()
-    {
-        omp_unset_lock(&tailLock);
+        if(node)
+            omp_unset_lock(&(node->nodeLock));
     }
 
     bool isEmpty()
     {
-        if(pListSize == 0)
+        lockNode(pListHead);
+        if(pListHead == NULL
+        {
+            unLockNode(pListHead);
             return true;
+        }
+        unLockNode(pListHead);
         return false;
     }
 
     int listSize()
     {
-        return pListSize;
+        lockNode(pListHead);
+        pListNode<T>* prev = NULL;
+        pListNode<T>* it = pListHead;
+        lockNode(pListHead);
+        int ans = 0;
+        while(it)
+        {
+            ans++;
+            prev = it;
+            it = it->next;
+            unLockNode(prev);
+            lockNode(it);
+        }
+        return ans;
     }
 
     void pushFront(T element)
     {
-        cout<<"Pushing new element at front "<<endl;
-        pListNode<T>* p = new pListNode<T>(element);
-
-        lockHead();
-        bool flag = false;
-        if(pListSize < 2)
+        #pragma omp critical
         {
-            flag = true;
-            lockTail();
+            cout<<"Pushing new element at front "<<endl;
+            pListNode<T>* p = new pListNode<T>(element);
+            lockNode(pListHead);
+            bool flag = false;
+            if(pListSize < 2)
+            {
+                flag = true;
+                lockNode(pListTail);
+            }
+            p->next = pListHead;
+            if(pListHead)
+                pListHead->prev = p;
+            else
+                pListTail = p;
+            pListHead = p;
+            pListSize++;
+            unLockNode(pListHead->next)
+            if(flag)
+                unLockNode(pListTail);
         }
-        p->next = pListHead;
-        if(pListHead)
-            pListHead->prev = p;
-        else
-            pListTail = p;
-        pListHead = p;
-        pListSize++;
-        freeHead();
-        if(flag)
-            freeTail();
     }
 
     void pushBack(T element)
     {
-        cout<<"Pushing new element at back "<<endl;
-        pListNode<T>* p = new pListNode<T>(element);
-
-        lockTail();
-        bool flag = false;
-        if(pListSize < 2)
+        #pragma omp critical
         {
-            lockHead();
-            flag = true;
-        }
-        p->prev = pListTail;
+            cout<<"Pushing new element at back "<<endl;
+            pListNode<T>* p = new pListNode<T>(element);
 
-        if(pListTail)
-            pListTail->next = p;
-        else
-            pListHead = p;
-        pListTail = p;
-        pListSize++;
-        freeTail();
-        if(flag)
-            freeHead();
+            lockNode(pListTail);
+            bool flag = false;
+            if(pListSize < 2)
+            {
+                lockNode(pListHead);
+                flag = true;
+            }
+            p->prev = pListTail;
+
+            if(pListTail)
+                pListTail->next = p;
+            else
+                pListHead = p;
+            pListTail = p;
+            pListSize++;
+            unLockNode(pListTail);
+            if(flag)
+                unLockNode(pListHead);
+        }
     }
 
     void popFront()
@@ -189,21 +201,29 @@ Constructor for generic doubly linked list type T
 
     T front()
     {
-        if(pListSize == 0)
+        //lockNode(pListHead);
+        if(pListHead == NULL)
         {
             cout<<"List is empty"<<endl;
+            //unLockNode(pListHead);
             return dummy->data;
         }
-        return pListHead->data;
+        T temp = pListHead->data;
+        //unLockNode(pListHead);
+        return temp;
     }
 
     T back()
     {
-        if(pListSize == 0)
+        //lockNode(pListTail);
+        if(pListTail == NULL)
         {
             cout<<"List is empty"<<endl;
+            //unLockNode(pListTail);
             return dummy->data;
         }
+        T temp = pListTail->data;
+        //unLockNode(pListTail);
         return pListTail->data;
     }
 
