@@ -1,2 +1,2 @@
 simulator: simulator.cpp
-	g++ *.cpp -o simulator
+	g++ -fopenmp simulator.cpp -o simulator
