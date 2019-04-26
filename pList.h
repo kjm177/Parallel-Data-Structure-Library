@@ -40,6 +40,11 @@ Constructor for generic doubly linked list type T
         pListHead = NULL;
         pListTail = NULL;
         dummy = new pListNode<T>(-99999999);
+        pListHead = new pListNode<T>(-99999999);
+        omp_init_lock(&(pListHead->nodeLock));
+        pListTail = new pListNode<T>(-99999999);
+        omp_init_lock(&(pListTail->nodeLock));
+
     }
 
     void lockNode(pListNode<T> *node)
@@ -56,13 +61,13 @@ Constructor for generic doubly linked list type T
 
     bool isEmpty()
     {
-        lockNode(pListHead);
-        if(pListHead == NULL)
+        omp_set_lock(&(pListHead->nodeLock));
+        if(pListHead->data == -99999999)
         {
-            unLockNode(pListHead);
+            omp_unset_lock(&(pListHead->nodeLock));
             return true;
         }
-        unLockNode(pListHead);
+        omp_unset_lock(&(pListHead->nodeLock));
         return false;
     }
 
@@ -91,12 +96,12 @@ Constructor for generic doubly linked list type T
             cout<<"Pushing new element at front "<<endl;
             pListNode<T>* p = new pListNode<T>(element);
             omp_init_lock(&(p->nodeLock));
-            lockNode(pListHead);
+            omp_set_lock(&(pListHead->nodeLock));
             bool flag = false;
-            if(pListSize < 2)
+            if(pListSize == 0)
             {
                 flag = true;
-                lockNode(pListTail);
+                omp_set_lock(&(pListTail->nodeLock));
             }
             p->next = pListHead;
             if(pListHead)
@@ -105,9 +110,9 @@ Constructor for generic doubly linked list type T
                 pListTail = p;
             pListHead = p;
             pListSize++;
-            unLockNode(pListHead->next);
+            omp_unset_lock(&(pListHead->nodeLock));
             if(flag)
-                unLockNode(pListTail);
+                omp_unset_lock(&(pListTail->nodeLock));
         }
     }
 
