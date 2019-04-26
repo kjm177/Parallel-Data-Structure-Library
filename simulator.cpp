@@ -15,7 +15,7 @@ using namespace std;
 int main(int argc, char* argv[])
 {
     printf("Parallel data structure simulator has begun!\n");
-    string inputFileName = "test_list_100.txt";
+    string inputFileName = "test_list_15.txt";
 
     struct testCase* t = readInput(inputFileName);
 

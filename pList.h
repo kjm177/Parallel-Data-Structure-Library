@@ -414,7 +414,7 @@ Constructor for generic doubly linked list type T
     {
         cout<<"Printing Doubly linked list: "<<endl;
         pListNode<T>* it = pListHead;
-        while(it)
+        while(it->data != -99999999)
         {
             cout<<it->data<<" ";
             it = it->next;
