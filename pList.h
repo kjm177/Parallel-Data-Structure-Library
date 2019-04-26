@@ -16,7 +16,7 @@ struct pListNode
     pListNode* next;
     pListNode* prev;
 
-    pListNode(T element) : data(element), next(NULL), prev(NULL), omp_init_lock(&nodeLock){}
+    pListNode(T element) : data(element), next(NULL), prev(NULL){}
 };
 
 
@@ -90,6 +90,7 @@ Constructor for generic doubly linked list type T
         {
             cout<<"Pushing new element at front "<<endl;
             pListNode<T>* p = new pListNode<T>(element);
+            omp_init_lock(&(p->nodeLock));
             lockNode(pListHead);
             bool flag = false;
             if(pListSize < 2)
@@ -116,6 +117,7 @@ Constructor for generic doubly linked list type T
         {
             cout<<"Pushing new element at back "<<endl;
             pListNode<T>* p = new pListNode<T>(element);
+            omp_init_lock(&(p->nodeLock));
 
             lockNode(pListTail);
             bool flag = false;
