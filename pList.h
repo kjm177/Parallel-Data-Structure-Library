@@ -6,6 +6,8 @@
 #include <unordered_set>
 #include <omp.h>
 
+#define sentinalInt -9999999
+
 using namespace std;
 
 template <typename T>
@@ -39,54 +41,24 @@ Constructor for generic doubly linked list type T
         pListSize = 0;
         pListHead = NULL;
         pListTail = NULL;
-        dummy = new pListNode<T>(-99999999);
-        pListHead = new pListNode<T>(-99999999);
+        dummy = new pListNode<T>(sentinalInt);
+        pListHead = new pListNode<T>(sentinalInt);
         omp_init_lock(&(pListHead->nodeLock));
-        pListTail = new pListNode<T>(-99999999);
+        pListTail = new pListNode<T>(sentinalInt);
         omp_init_lock(&(pListTail->nodeLock));
 
     }
 
-    void lockNode(pListNode<T> *node)
-    {
-        if(node)
-            omp_set_lock(&(node->nodeLock));
-    }
-
-    void unLockNode(pListNode<T> *node)
-    {
-        if(node)
-            omp_unset_lock(&(node->nodeLock));
-    }
-
     bool isEmpty()
     {
-        omp_set_lock(&(pListHead->nodeLock));
-        if(pListHead->data == -99999999)
-        {
-            omp_unset_lock(&(pListHead->nodeLock));
+        if(pListSize == 0)
             return true;
-        }
-        omp_unset_lock(&(pListHead->nodeLock));
         return false;
     }
 
     int listSize()
     {
-        lockNode(pListHead);
-        pListNode<T>* prev = NULL;
-        pListNode<T>* it = pListHead;
-        lockNode(pListHead);
-        int ans = 0;
-        while(it)
-        {
-            ans++;
-            prev = it;
-            it = it->next;
-            unLockNode(prev);
-            lockNode(it);
-        }
-        return ans;
+        return pListSize;
     }
 
     void pushFront(T element)
@@ -96,23 +68,18 @@ Constructor for generic doubly linked list type T
             cout<<"Pushing new element at front "<<endl;
             pListNode<T>* p = new pListNode<T>(element);
             omp_init_lock(&(p->nodeLock));
+
             omp_set_lock(&(pListHead->nodeLock));
-            bool flag = false;
-            if(pListSize == 0)
-            {
-                flag = true;
-                omp_set_lock(&(pListTail->nodeLock));
-            }
-            p->next = pListHead;
-            if(pListHead)
-                pListHead->prev = p;
-            else
-                pListTail = p;
-            pListHead = p;
+            omp_set_lock(&(pListHead->next->nodeLock));
+
+            p->next = pListHead->next;
+            p->prev = pListHead;
+            pListHead->next->prev = p;
+            pListHead->next = p;
             pListSize++;
+
             omp_unset_lock(&(pListHead->nodeLock));
-            if(flag)
-                omp_unset_lock(&(pListTail->nodeLock));
+            omp_unset_lock(&(p->next->nodeLock));
         }
     }
 
@@ -124,24 +91,19 @@ Constructor for generic doubly linked list type T
             pListNode<T>* p = new pListNode<T>(element);
             omp_init_lock(&(p->nodeLock));
 
-            lockNode(pListTail);
-            bool flag = false;
-            if(pListSize < 2)
-            {
-                lockNode(pListHead);
-                flag = true;
-            }
-            p->prev = pListTail;
+            omp_set_lock(&(pListTail->prev->nodeLock));
+            omp_set_lock(&(pListTail->nodeLock));
 
-            if(pListTail)
-                pListTail->next = p;
-            else
-                pListHead = p;
-            pListTail = p;
+
+            p->prev = pListTail->prev;
+            p->next = pListTail;
+            pListTail->prev->next = p;
+            pListTail->prev = p;
             pListSize++;
-            unLockNode(pListTail);
-            if(flag)
-                unLockNode(pListHead);
+
+            omp_unset_lock(&(p->prev->nodeLock));
+            omp_unset_lock(&(pListTail->nodeLock));
+
         }
     }
 
@@ -413,8 +375,8 @@ Constructor for generic doubly linked list type T
     void printList()
     {
         cout<<"Printing Doubly linked list: "<<endl;
-        pListNode<T>* it = pListHead;
-        while(it->data != -99999999)
+        pListNode<T>* it = pListHead->next;
+        while(it->data != sentinalInt)
         {
             cout<<it->data<<" ";
             it = it->next;
