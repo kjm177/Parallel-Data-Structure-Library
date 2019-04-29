@@ -17,6 +17,8 @@ void Test::testArray(int op) {
   ofstream file(path);
   if (file.is_open())
   {
+    file << "1\n"
+    file << op <<"\n";
     int size = (rand() % 20)+1;
     file << "0 " + to_string(size) + "\n";
     file << "7 0\n";                          //Constructor
@@ -64,6 +66,8 @@ void Test::testForwardList(int op) {
 
   if (file.is_open())
   {
+    file << "2\n"
+    file << op <<"\n";
     file << "0\n";                            //Constructor
     for(int i = 0; i < 5; i++) {
       int num = rand_int_generator(200);
@@ -103,13 +107,15 @@ void Test::testForwardList(int op) {
 
 
 void Test::testList(int op) {
-  string path = "test_forwardlist_" + to_string(op) + ".txt";
+  string path = "test_list_" + to_string(op) + ".txt";
   ofstream file(path);
 
   int num, arg1, arg2, size=0;
 
   if (file.is_open())
   {
+    file << "3\n"
+    file << op <<"\n";
     file << "0\n";                            //Constructor
     for(int i = 0; i < 5; i++) {
       int num = rand_int_generator(200);
