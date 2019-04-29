@@ -248,8 +248,8 @@ void testForwardList(struct testCase* t)
     }
 
     cout<<t->operations[0][1];
-    pArray <int> arr(t->operations[0][1]);
-    arr.printArray();
+    pSList <int> sll();
+    sll.printList();
 
     for(int i = 1 ; i < t->numOfOperations ; i++)
     {
@@ -258,48 +258,58 @@ void testForwardList(struct testCase* t)
         {
         case 1:
             {
-                arr[t->operations[i][1]] = t->operations[i][2];
+                int s = sll.listSize();
                 break;
             }
         case 2:
             {
-                int s = arr.arraySize();
+                bool check = sll.isEmpty();
                 break;
             }
         case 3:
             {
-                bool isEmpty = arr.isEmpty();
+                sll.pushFront(t->operations[i][1]);
                 break;
             }
         case 4:
             {
-                int arrayFront = arr.front();
+                sll.popFront();
                 break;
             }
         case 5:
             {
-                int arrayBack = arr.back();
+                dll.insertAfter(t->operations[i][1], t->operations[i][2]);
                 break;
             }
         case 6:
             {
-                int num = arr.at(t->operations[i][1]);
+                sll.getIndex(t->operations[i][1]);
                 break;
             }
         case 7:
             {
-                arr.fillArray(t->operations[i][1]);
+                int element = sll.front();
                 break;
             }
         case 8:
             {
-                arr.sortArray(t->operations[i][1]);
+                sll.reverse();
                 break;
             }
         case 9:
             {
-                arr.reverseArray();
+                sll.erase(t->operations[i][1]);
                 break;
+            }
+        case 10:
+            {
+              sll.unique();
+              break;
+            }
+        case 11:
+            {
+              sll.sort(t->operations[i][1]);
+              break;
             }
         default:
             {
