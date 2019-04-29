@@ -38,6 +38,18 @@ public:
     }
 
     /**
+    Returns pointer to a copy of the list
+    */
+
+    pSListNode<T>* copyList(pSListNode<T>* list) {
+      if (list->next == NULL) return NULL;
+      pSListNode<T>* newHead = new pSListNode<T>(0);
+      newHead->data = list->data;
+      newHead->next = Clone(list->next);
+      return newHead;
+    }
+
+    /**
     Returns list size/length
     */
     int listSize() {
@@ -123,7 +135,7 @@ public:
             }
           }
           else cout<<"List index out of bound!"<<endl;
-              
+
     }
 
     /**
@@ -143,43 +155,6 @@ public:
       {
           cout<<"List index out of bound!"<<endl;
           return dummy->data;
-      }
-    }
-
-    /**
-    Returns element at the front of the list
-    */
-    T front() {
-      if(List_Size == 0) {
-        cout<<"List is empty!"<<endl;
-        return  dummy->data;
-      }
-      else
-      {
-        return Head->next->data;
-      }
-    }
-
-    /**
-    Reverses the list
-    */
-    void reverse() {
-      pSListNode<T>* ptr = Head->next;
-      for(int i = 0; i < List_Size; i++) {
-        omp_set_lock(&(ptr->nodeLock));
-      }
-      pSListNode<T>* curr = Head->next;
-      pSListNode<T>* prev = NULL;
-      pSListNode<T>* next = NULL;
-      while(curr != NULL) {
-        next = curr->next;
-        curr->next = prev;
-        prev = curr;
-        curr = next;
-      }
-      Head->next = prev;
-      for(int i = 0; i < List_Size; i++) {
-        omp_unset_lock(&(ptr->nodeLock));
       }
     }
 
@@ -212,6 +187,46 @@ public:
           throw index;
       }
     }
+
+    /**
+    Returns element at the front of the list
+    */
+    T front() {
+      if(List_Size == 0) {
+        cout<<"List is empty!"<<endl;
+        return  dummy->data;
+      }
+      else
+      {
+        return Head->next->data;
+      }
+    }
+
+    /**
+    Reverses the list
+    */
+    void reverse() {
+      pSListNode<T>* newHead = Head->next;
+      pSListNode<T>* it;
+      pSListNode<T>* curr = copyList(Head->next);
+      pSListNode<T>* prev = NULL;
+      pSListNode<T>* next = NULL;
+      while(curr != NULL) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+      }
+      newHead = prev;
+      cout<<"Reversed list: ";
+      while(newHead != NULL) {
+        cout<<newHead->data<<" ";
+        it = newHead;
+        newHead = newHead->next;
+        free(it);
+      }
+    }
+
 
     /**
     Removes duplicate elements from a list by keeping only the first occurence of the element
