@@ -45,7 +45,7 @@ public:
       if (list->next == NULL) return NULL;
       pSListNode<T>* newHead = new pSListNode<T>(0);
       newHead->data = list->data;
-      newHead->next = Clone(list->next);
+      newHead->next = copyList(list->next);
       return newHead;
     }
 
@@ -206,25 +206,28 @@ public:
     Reverses the list
     */
     void reverse() {
-      pSListNode<T>* newHead = Head->next;
-      pSListNode<T>* it;
-      pSListNode<T>* curr = copyList(Head->next);
-      pSListNode<T>* prev = NULL;
-      pSListNode<T>* next = NULL;
-      while(curr != NULL) {
-        next = curr->next;
-        curr->next = prev;
-        prev = curr;
-        curr = next;
+      if(List_Size > 0) {
+        pSListNode<T>* newHead = copyList(Head->next);
+        pSListNode<T>* it;
+        pSListNode<T>* curr = newHead;
+        pSListNode<T>* prev = NULL;
+        pSListNode<T>* next = NULL;
+        while(curr != NULL) {
+          next = curr->next;
+          curr->next = prev;
+          prev = curr;
+          curr = next;
+        }
+        newHead = prev;
+        cout<<"Reversed list: ";
+        while(newHead != NULL) {
+          cout<<newHead->data<<" ";
+          it = newHead;
+          newHead = newHead->next;
+          free(it);
+        }
       }
-      newHead = prev;
-      cout<<"Reversed list: ";
-      while(newHead != NULL) {
-        cout<<newHead->data<<" ";
-        it = newHead;
-        newHead = newHead->next;
-        free(it);
-      }
+      else cout<<"List is empty!"<<endl;
     }
 
 
@@ -233,8 +236,9 @@ public:
     */
     void unique() {
       if(List_Size > 0) {
+        pSListNode<T>* newHead = copyList(Head->next);
         set<T> s;
-        pSListNode<T>* it = Head;
+        pSListNode<T>* it = newHead;
         int i = 0;
         while(it && i < List_Size) {
           if(s.find(it->data) != s.end())
@@ -244,24 +248,28 @@ public:
           it = it->next;
           i++;
         }
+        cout<<"Unique list: ";
+        while(newHead != NULL) {
+          cout<<newHead->data<<" ";
+          it = newHead;
+          newHead = newHead->next;
+          free(it);
+        }
       }
-      else
-      {
-          cout<<"List is empty!"<<endl;
-          throw 0;
-      }
+      else cout<<"List is empty!"<<endl;
     }
 
     /**
     Sorts list in ascending on descending order specified by argument passed to it
     */
     void sort(bool ascending) {
-      if(ascending) {
-        if(List_Size > 1) {
+      if(List_Size > 1) {
+        pSListNode<T>* newHead = copyList(Head->next);
+        if(ascending) {
           int i,j;
           for(i = 0; i < List_Size-1; i++ ) {
-            pSListNode<T>* current = Head;
-            pSListNode<T>* next = Head->next;
+            pSListNode<T>* current = newHead;
+            pSListNode<T>* next = newHead->next;
             for(j = 0; j < List_Size-i-1; j++ ) {
               if(current->data > next->data) {
                 T temp = current->data;
@@ -273,13 +281,11 @@ public:
             }
           }
         }
-      }
-      else {
-        if(List_Size > 1) {
+        else {
           int i,j;
           for(i = 0; i < List_Size-1; i++ ) {
-            pSListNode<T>* current = Head;
-            pSListNode<T>* next = Head->next;
+            pSListNode<T>* current = newHead;
+            pSListNode<T>* next = newHead->next;
             for(j = 0; j < List_Size-i-1; j++ ) {
               if(current->data < next->data) {
                 T temp = current->data;
@@ -290,6 +296,13 @@ public:
               next = next->next;
             }
           }
+        }
+        cout<<"Sorted list: ";
+        while(newHead != NULL) {
+          cout<<newHead->data<<" ";
+          it = newHead;
+          newHead = newHead->next;
+          free(it);
         }
       }
     }
