@@ -46,7 +46,8 @@ Constructor for generic doubly linked list type T
         omp_init_lock(&(pListHead->nodeLock));
         pListTail = new pListNode<T>(sentinalInt);
         omp_init_lock(&(pListTail->nodeLock));
-
+        pListHead->next = pListTail;
+        pListTail->prev = pListHead;
     }
 
     bool isEmpty()
@@ -117,7 +118,7 @@ Constructor for generic doubly linked list type T
 
         omp_set_lock(&(pListHead->nodeLock));
         omp_set_lock(&(pListHead->next->nodeLock));
-        omp_set_lock(&(pListHead->next->nodeLock));
+        omp_set_lock(&(pListHead->next->next->nodeLock));
 
         pListNode<T>* p = pListHead->next;
         pListHead->next = p->next;
@@ -158,11 +159,13 @@ Constructor for generic doubly linked list type T
 
     T front()
     {
+        cout<<"Front"<<endl;
         return pListHead->next->data;
     }
 
     T back()
     {
+        cout<<"Back"<<endl;
         return pListTail->prev->data;
     }
 
@@ -197,18 +200,28 @@ Constructor for generic doubly linked list type T
 
     void insertAt(T element, int index)
     {
+        cout<<"Inserting element at index "<<index<<endl;
         if(index < 0 || index  > pListSize)
         {
             cout<<"Invalid index!"<<endl;
             return;
         }
-
+        if(index == 0)3
+        {
+            pushFront(element);
+            return;
+        }
         pListNode<T>* it = pListHead;
         omp_set_lock(&(it->nodeLock));
         pListNode<T>* next = it->next;
 
         while(index && it)
         {
+            if(next == NULL)
+            {
+                cout<<"Invalid index"<<endl;
+                return;
+            }
             omp_set_lock(&(next->nodeLock));
             it = next;
             omp_unset_lock(&(it->nodeLock));
@@ -254,6 +267,7 @@ Constructor for generic doubly linked list type T
             omp_unset_lock(&(prev->nodeLock));
             next = prev->next;
         }
+
         if(!next || next->data == sentinalInt)
         {
             cout<<"Invalid index!"<<endl;
