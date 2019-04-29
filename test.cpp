@@ -66,6 +66,7 @@ void Test::testForwardList(int op) {
 
   if (file.is_open())
   {
+    int count = 0;
     file << "2\n"
     file << op <<"\n";
     file << "0\n";                            //Constructor
@@ -73,8 +74,9 @@ void Test::testForwardList(int op) {
       int num = rand_int_generator(200);
       file << "3 " + to_string(num) + "\n";   //Push front 5 random numbers to list
       size++;
+      count++;
     }
-    for(int i = 0; i < op-6; i++) {
+    for(int i = 0; i < op-count; i++) {
        num = rand_int_generator(12) + 1;
        if(num == 3) {                        //Push Front element in arg1
          arg1 = rand_int_generator(200);
@@ -114,15 +116,17 @@ void Test::testList(int op) {
 
   if (file.is_open())
   {
+    int count = 0;
     file << "3\n"
     file << op <<"\n";
     file << "0\n";                            //Constructor
-    for(int i = 0; i < 5; i++) {
+    for(int i = 0; i < op/40; i++) {
       int num = rand_int_generator(200);
       file << "3 " + to_string(num) + "\n";   //Push front 5 random numbers to list
       size++;
+      count++;
     }
-    for(int i = 0; i < op-6; i++) {
+    for(int i = 0; i < op-count; i++) {
        num = rand_int_generator(12) + 1;
        if(num == 3) {                        //Push Front element in arg1
          arg1 = rand_int_generator(200);
