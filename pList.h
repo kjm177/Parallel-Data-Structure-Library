@@ -209,8 +209,6 @@ Constructor for generic doubly linked list type T
         }
 
         pListNode<T>* prev = pListHead;
-        omp_set_lock(&(prev->nodeLock));
-
         pListNode<T>* it = prev->next;
 
         while(index)
@@ -220,12 +218,12 @@ Constructor for generic doubly linked list type T
                 cout<<"Invalid index"<<endl;
                 return;
             }
-            omp_set_lock(&(it->nodeLock));
-            if(prev->prev)
-                omp_unset_lock(&(prev->prev->nodeLock));
             prev = it;
             it = it->next;
         }
+        omp_set_lock(&(prev->nodeLock));
+        omp_set_lock(&(it->nodeLock));
+
 
         pListNode<T>* p = new pListNode<T>(element);
         omp_init_lock(&(p->nodeLock));
@@ -233,6 +231,7 @@ Constructor for generic doubly linked list type T
         p->prev = prev;
         prev->next = p;
         it->prev = p;
+        pListSize++;
         omp_unset_lock(&(prev->nodeLock));
         omp_unset_lock(&(it->nodeLock));
     }
@@ -247,33 +246,36 @@ Constructor for generic doubly linked list type T
             return;
         }
         pListNode<T>* prev = pListHead;
-        omp_set_lock(&(prev->nodeLock));
-        pListNode<T>* next = prev->next;
+        pListNode<T>* it = prev->next;
 
-        index--;
-        while(index && next)
+        index;
+        while(index)
         {
-            omp_set_lock(&(next->nodeLock));
-            prev = next;
-            omp_unset_lock(&(prev->nodeLock));
-            next = prev->next;
+            if(!it)
+            {
+                cout<<"Invalid index"<<endl;
+                return;
+            }
+            prev = it;
+            it = it->next;
         }
 
-        if(!next || next->data == sentinalInt)
+        if(!it || it->data == sentinalInt)
         {
             cout<<"Invalid index!"<<endl;
             return;
         }
-        omp_set_lock(&(next->nodeLock));
-        omp_set_lock(&(next->next->nodeLock));
-        pListNode<T>* p = next;
-        next = next->next;
-        prev->next = next;
-        next->prev = prev;
-        free(p);
+
+        omp_set_lock(&(prev->nodeLock));
+        omp_set_lock(&(it->nodeLock));
+        omp_set_lock(&(it->next->nodeLock));
+
+        prev->next = it->next;
+        it->next->prev = prev;
+        free(it);
         pListSize--;
         omp_unset_lock(&(prev->nodeLock));
-        omp_unset_lock(&(next->nodeLock));
+        omp_unset_lock(&(prev->next->nodeLock));
     }
 
     pListNode<T>* copyList()
