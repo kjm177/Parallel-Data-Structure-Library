@@ -326,6 +326,9 @@ void testForwardList(struct testCase* t)
             }
         }
     }
+    cout<<endl;
+    cout<<"Final Singly linked list: "<<endl;
+    sll.printList();
 
 }
 

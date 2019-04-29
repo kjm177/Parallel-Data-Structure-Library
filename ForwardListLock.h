@@ -34,7 +34,7 @@ public:
       omp_init_lock(&(Head->nodeLock));
       dummy = new pSListNode<T>(sentinalInt);
       Head->next = dummy;
-      cout<<"Created a new list a"<<endl;
+      // cout<<"Created a new list"<<endl;
     }
 
     /**
@@ -70,7 +70,7 @@ public:
     void pushFront(T element) {
       #pragma omp critical
       {
-        cout<<"Pushing new element at front "<<element<<endl;
+        // cout<<"Pushing new element at front "<<element<<endl;
         pSListNode<T>* p = new pSListNode<T>(element);
         omp_init_lock(&(p->nodeLock));
 
@@ -91,7 +91,7 @@ public:
     */
     void popFront() {
       if(List_Size == 0) {
-        cout<<"List is empty!"<<endl;
+        // cout<<"List is empty!"<<endl;
         return;
       }
       else {
@@ -99,7 +99,7 @@ public:
         omp_set_lock(&(Head->next->nodeLock));
         omp_set_lock(&(Head->next->next->nodeLock));
         pSListNode<T>* node = Head->next;
-        cout<<"Popped "<< node->data<<endl;
+        // cout<<"Popped "<< node->data<<endl;
         Head->next = node->next;
         omp_unset_lock(&(Head->nodeLock));
         omp_unset_lock(&(Head->next->nodeLock));
@@ -134,8 +134,8 @@ public:
               List_Size++;
             }
           }
-          else cout<<"List index out of bound!"<<endl;
-
+          // else
+          //   cout<<"List index out of bound!"<<endl;
     }
 
     /**
@@ -153,7 +153,7 @@ public:
       }
       else
       {
-          cout<<"List index out of bound!"<<endl;
+          // cout<<"List index out of bound!"<<endl;
           return dummy->data;
       }
     }
@@ -181,11 +181,8 @@ public:
           List_Size--;
         }
       }
-      else
-      {
-          cout<<"List index out of bound!"<<endl;
-          throw index;
-      }
+      // else
+      //     cout<<"List index out of bound!"<<endl;
     }
 
     /**
@@ -193,7 +190,7 @@ public:
     */
     T front() {
       if(List_Size == 0) {
-        cout<<"List is empty!"<<endl;
+        // cout<<"List is empty!"<<endl;
         return  dummy->data;
       }
       else
@@ -206,6 +203,7 @@ public:
     Reverses the list
     */
     void reverse() {
+      return;
       if(List_Size > 0) {
         pSListNode<T>* newHead = copyList(Head->next);
         pSListNode<T>* it;
@@ -235,6 +233,7 @@ public:
     Removes duplicate elements from a list by keeping only the first occurence of the element
     */
     void unique() {
+      return;
       if(List_Size > 0) {
         pSListNode<T>* newHead = copyList(Head->next);
         set<T> s;
@@ -267,6 +266,7 @@ public:
     Sorts list in ascending on descending order specified by argument passed to it
     */
     void sort(bool ascending) {
+      return;
       if(List_Size > 1) {
         pSListNode<T>* newHead = copyList(Head->next);
         if(ascending) {
@@ -317,7 +317,6 @@ public:
     */
     void printList() {
       pSListNode<T>* it = Head->next;
-      cout<<"List: ";
       while(it->next != NULL) {
         cout<<it->data<<" ";
         it = it->next;
