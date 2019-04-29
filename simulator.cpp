@@ -3,7 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <omp.h>
-#include "pForwardList.h"
+#include "ForwardListLock.h"
 #include "pList.h"
 #include "pArray.h"
 #include "utility.h"
