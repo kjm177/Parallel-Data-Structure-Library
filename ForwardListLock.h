@@ -32,7 +32,8 @@ public:
       List_Size = 0;
       Head = new pSListNode<T>(sentinalInt);
       omp_init_lock(&(Head->nodeLock));
-      dummy = new pListNode<T>(sentinalInt);
+      dummy = new pSListNode<T>(sentinalInt);
+      Head->next = dummy;
       cout<<"Created a new list a"<<endl;
     }
 
@@ -57,24 +58,37 @@ public:
     void pushFront(T element) {
       #pragma omp critical
       {
-        pSListNode<T>* node = new pSListNode<T>(element);
-        omp_init_lock(&(node->nodeLock));
+        cout<<"Pushing new element at front "<<endl;
+        pSListNode<T>* p = new pSListNode<T>(element);
+        omp_init_lock(&(p->nodeLock));
 
-        if(List_Size == 0) {
-          omp_set_lock(&(Head->nodeLock));
-          node->next = Head->next;
-          Head->next = node;
-          omp_unset_lock(&(Head->nodeLock));
-        }
-        else {
-          omp_set_lock(&(Head->nodeLock));
-          omp_set_lock(&(Head->next->nodeLock));
-          node->next = Head->next;
-          Head->next = node;
-          omp_unset_lock(&(Head->nodeLock));
-          omp_unset_lock(&(Head->next->nodeLock));
-        }
+        omp_set_lock(&(Head->nodeLock));
+        omp_set_lock(&(pListHead->next->nodeLock));
+
+        p->next = pListHead->next;
+        Head->next = p;
         List_Size++;
+
+        omp_unset_lock(&(pListHead->nodeLock));
+        omp_unset_lock(&(p->next->nodeLock));
+        // pSListNode<T>* node = new pSListNode<T>(element);
+        // omp_init_lock(&(node->nodeLock));
+        //
+        // if(List_Size == 0) {
+        //   omp_set_lock(&(Head->nodeLock));
+        //   node->next = Head->next;
+        //   Head->next = node;
+        //   omp_unset_lock(&(Head->nodeLock));
+        // }
+        // else {
+        //   omp_set_lock(&(Head->nodeLock));
+        //   omp_set_lock(&(Head->next->nodeLock));
+        //   node->next = Head->next;
+        //   Head->next = node;
+        //   omp_unset_lock(&(Head->nodeLock));
+        //   omp_unset_lock(&(Head->next->nodeLock));
+        // }
+        // List_Size++;
       }
     }
 
@@ -87,7 +101,7 @@ public:
       else {
         omp_set_lock(&(Head->nodeLock));
         omp_set_lock(&(Head->next->nodeLock));
-        pListNode<T>* node = Head->next;
+        pSListNode<T>* node = Head->next;
         Head->next = node->next;
         omp_unset_lock(&(Head->nodeLock));
         omp_unset_lock(&(node->nodeLock));
