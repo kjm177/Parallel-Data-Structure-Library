@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+#include "test.h"
 
 
 using namespace std;
@@ -11,7 +12,7 @@ int rand_int_generator(int N) {
   return rand()%N;
 }
 
-string testArray(int op) {
+void Test::testArray(int op) {
   string path = "test_array_" + to_string(op) + ".txt";
   ofstream file(path);
   if (file.is_open())
@@ -52,11 +53,10 @@ string testArray(int op) {
   else cout << "Unable to open file";
   file.close();
 
-  return path;
 }
 
 
-string testForwardList(int op) {
+void Test::testForwardList(int op) {
   string path = "test_forwardlist_" + to_string(op) + ".txt";
   ofstream file(path);
 
@@ -77,9 +77,6 @@ string testForwardList(int op) {
          file << "3 " + to_string(arg1) + "\n";
          size++;
        }
-       // else if(num == 4 || num == 9) {       //Decrease list size on popping or erasing
-       //   file << to_string(num) + "\n";
-       // }
        else if(num == 5) {                   //Insert at index arg1, element arg2
          arg1 = rand_int_generator(size);
          arg2 = rand_int_generator(200);
@@ -102,11 +99,10 @@ string testForwardList(int op) {
   else cout << "Unable to open file";
   file.close();
 
-  return path;
 }
 
 
-string testList(int op) {
+void Test::testList(int op) {
   string path = "test_forwardlist_" + to_string(op) + ".txt";
   ofstream file(path);
 
@@ -127,9 +123,6 @@ string testList(int op) {
          file << "3 " + to_string(arg1) + "\n";
          size++;
        }
-       // else if(num == 4 || num == 9) {       //Decrease list size on popping or erasing
-       //   file << to_string(num) + "\n";
-       // }
        else if(num == 5) {                   //Insert at index arg1, element arg2
          arg1 = rand_int_generator(size);
          arg2 = rand_int_generator(200);
@@ -151,14 +144,28 @@ string testList(int op) {
 
   else cout << "Unable to open file";
   file.close();
-
-  return path;
-
 }
 
-int main() {
-  string path = testForwardList(100);
-  cout<<"HI";
-
+int main(int argc, char* argv[]) {
+  if(argc != 3) {
+    cout<<"Run as ./test <a/s/d> <# of ops>";
+    exit(0);
+  }
+  else {
+    Test t;
+    switch(argv[1][0]) {
+      case 'a':
+        t.testArray(atoi(argv[2]));
+        break;
+      case 's':
+        t.testForwardList(atoi(argv[2]));
+        break;
+      case 'd':
+        t.testList(atoi(argv[2]));
+        break;
+      default:
+        cout<<"default";
+    }
+  }
   return 0;
 }

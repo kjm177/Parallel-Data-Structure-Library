@@ -8,9 +8,9 @@ class Test {
 private:
   string path;
 public:
-  string testArray(int op);
-  string testForwardList(int op);
-  string testList(int op);
-}
+  void testArray(int op);
+  void testForwardList(int op);
+  void testList(int op);
+};
 
 #endif
