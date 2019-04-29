@@ -206,7 +206,7 @@ Constructor for generic doubly linked list type T
             cout<<"Invalid index!"<<endl;
             return;
         }
-        if(index == 0)3
+        if(index == 0)
         {
             pushFront(element);
             return;
