@@ -248,7 +248,7 @@ void testForwardList(struct testCase* t)
     }
 
     pSList <int> sll;
-    sll.printList();
+    
 #pragma omp parallel for num_threads(5)
     for(int i = 1 ; i < t->numOfOperations ; i++)
     {
