@@ -286,13 +286,15 @@ void testForwardList(struct testCase* t)
             }
         case 6:
             {
-                sll.getIndex(t->operations[i][1]);
-                break;
+                int element = sll.getIndex(t->operations[i][1]);
+		cout<<"Element at index is: "<<element<<endl;
+		break;
             }
         case 7:
             {
                 int element = sll.front();
-                break;
+                cout<<"Element at front is "<<element<<endl;
+		break;
             }
         case 8:
             {
