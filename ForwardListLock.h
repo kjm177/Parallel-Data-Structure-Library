@@ -298,6 +298,7 @@ public:
           }
         }
         cout<<"Sorted list: ";
+        pSListNode<T>* it;
         while(newHead != NULL) {
           cout<<newHead->data<<" ";
           it = newHead;
