@@ -278,20 +278,11 @@ Constructor for generic doubly linked list type T
         omp_unset_lock(&(prev->next->nodeLock));
     }
 
-    pListNode<T>* copyList(pListNode<T>* inputListHead, pListNode<T>* prev)
-    {
-        if (inputListHead->next == NULL)
-            return NULL;
-        pSListNode<T>* newHead = new pSListNode<T>(inputListHead->data);
-        newHead->prev = prev;
-        newHead->next = copyList(inputListHead->next, inputListHead);
-        return newHead;
-    }
 
     void sortList(bool ascending)
     {
         //cout<<"NOT READY. Sorting: "<<endl;
-        pListNode<T>* head = copyList(pListHead, NULL);
+        //pListNode<T>* head = copyList(pListHead, NULL);
         return;
         if(ascending)
         {
