@@ -63,13 +63,13 @@ public:
         omp_init_lock(&(p->nodeLock));
 
         omp_set_lock(&(Head->nodeLock));
-        omp_set_lock(&(pListHead->next->nodeLock));
+        omp_set_lock(&(Head->next->nodeLock));
 
-        p->next = pListHead->next;
+        p->next = Head->next;
         Head->next = p;
         List_Size++;
 
-        omp_unset_lock(&(pListHead->nodeLock));
+        omp_unset_lock(&(Head->nodeLock));
         omp_unset_lock(&(p->next->nodeLock));
         // pSListNode<T>* node = new pSListNode<T>(element);
         // omp_init_lock(&(node->nodeLock));
@@ -96,19 +96,23 @@ public:
     Deletes element at the front of the list
     */
     void popFront() {
-      if(List_Size == 0)
+      if(List_Size == 0) {
         cout<<"List is empty!";
+        return;
+      }
       else {
         omp_set_lock(&(Head->nodeLock));
         omp_set_lock(&(Head->next->nodeLock));
+        omp_set_lock(&(Head->next->next->nodeLock));
         pSListNode<T>* node = Head->next;
         Head->next = node->next;
         omp_unset_lock(&(Head->nodeLock));
-        omp_unset_lock(&(node->nodeLock));
+        omp_unset_lock(&(Head->next->nodeLock));
         free(node);
         List_Size--;
       }
     }
+
 
     /**
     Adds element of type T at position 'index'
@@ -299,9 +303,9 @@ public:
     Prints the contents of the list
     */
     void printList() {
-      pSListNode<T>* it = Head;
+      pSListNode<T>* it = Head->next;
       cout<<"List: ";
-      while(it) {
+      while(it->next != NULL) {
         cout<<it->data<<" ";
         it = it->next;
       }
