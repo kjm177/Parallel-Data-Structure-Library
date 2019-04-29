@@ -247,23 +247,24 @@ void testForwardList(struct testCase* t)
         return;
     }
 
-    cout<<t->operations[0][1];
     pSList <int> sll;
     sll.printList();
-
+#pragma omp parallel for num_threads(5)
     for(int i = 1 ; i < t->numOfOperations ; i++)
     {
-        cout<<i<<" ";
         switch(t->operations[i][0])
         {
         case 1:
             {
                 int s = sll.listSize();
+                cout<<"List size is "<<s<<endl;
                 break;
             }
         case 2:
             {
                 bool check = sll.isEmpty();
+                if(check) cout<<"List is empty!"<<endl;
+                else cout<<"List is not empty!"<<endl;
                 break;
             }
         case 3:
