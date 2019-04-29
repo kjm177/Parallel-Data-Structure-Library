@@ -58,7 +58,7 @@ public:
     void pushFront(T element) {
       #pragma omp critical
       {
-        cout<<"Pushing new element at front "<<endl;
+        cout<<"Pushing new element at front "<<element<<endl;
         pSListNode<T>* p = new pSListNode<T>(element);
         omp_init_lock(&(p->nodeLock));
 
@@ -122,11 +122,8 @@ public:
               List_Size++;
             }
           }
-          else
-          {
-              cout<<"List index out of bound!"<<endl;
-              throw index;
-          }
+          else cout<<"List index out of bound!"<<endl;
+              
     }
 
     /**
