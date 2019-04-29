@@ -182,6 +182,7 @@ Constructor for generic doubly linked list type T
 
     T getIndex(int index)
     {
+
         if(pListSize == 0 || index < 0 || index >= pListSize)
         {
             cout<<"Index out of bounds"<<endl;
@@ -206,44 +207,34 @@ Constructor for generic doubly linked list type T
             cout<<"Invalid index!"<<endl;
             return;
         }
-        if(index == 0)
-        {
-            pushFront(element);
-            return;
-        }
-        pListNode<T>* it = pListHead;
-        omp_set_lock(&(it->nodeLock));
-        pListNode<T>* next = it->next;
 
-        while(index && it)
+        pListNode<T>* prev = pListHead;
+        omp_set_lock(&(prev->nodeLock));
+
+        pListNode<T>* it = prev->next;
+
+        while(index)
         {
-            if(next == NULL)
+            if(!it)
             {
                 cout<<"Invalid index"<<endl;
                 return;
             }
-            omp_set_lock(&(next->nodeLock));
-            it = next;
-            omp_unset_lock(&(it->nodeLock));
-            next = it->next;
+            omp_set_lock(&(it->nodeLock));
+            if(prev->prev)
+                omp_unset_lock(&(prev->prev->nodeLock));
+            prev = it;
+            it = it->next;
         }
-        if(!it || it->data == sentinalInt)
-        {
-            if(it)
-                omp_unset_lock(&(it->nodeLock));
-            return;
-        }
-        omp_set_lock(&(next->nodeLock));
 
         pListNode<T>* p = new pListNode<T>(element);
         omp_init_lock(&(p->nodeLock));
-        p->next = next;
-        p->prev = it;
-        it->next = p;
-        next->prev = p;
-
+        p->next = it;
+        p->prev = prev;
+        prev->next = p;
+        it->prev = p;
+        omp_unset_lock(&(prev->nodeLock));
         omp_unset_lock(&(it->nodeLock));
-        omp_unset_lock(&(next->nodeLock));
     }
 
 
@@ -283,6 +274,19 @@ Constructor for generic doubly linked list type T
         pListSize--;
         omp_unset_lock(&(prev->nodeLock));
         omp_unset_lock(&(next->nodeLock));
+    }
+
+    pListNode<T>* copyList()
+    {
+        pList<T>* newListHead;
+        pListNode<T>* newListIt;
+        pListNode<T>* prev = NULL;
+        pListNode<T>* it = pListHead;
+        //while(it)
+        //{
+        //    omp_set_lock(&(it->nodeLock));
+        //    if(!prev)
+        //}
     }
 
     void sortList(bool ascending)
@@ -334,6 +338,8 @@ Constructor for generic doubly linked list type T
             }
         }
     }
+
+
 
     void reverseList()
     {
