@@ -239,12 +239,16 @@ public:
         pSListNode<T>* newHead = copyList(Head->next);
         set<T> s;
         pSListNode<T>* it = newHead;
+        pSListNode<T>* prev;
         int i = 0;
         while(it && i < List_Size) {
-          if(s.find(it->data) != s.end())
-            erase(i);
-          else
-            s.insert(it->data);
+          if(s.find(it->data) != s.end()) {
+            prev->next = it->next;
+            pSListNode<T>* temp = it;
+            free(temp);
+          }
+          else s.insert(it->data);
+          prev = it;
           it = it->next;
           i++;
         }
