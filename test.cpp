@@ -17,7 +17,7 @@ void Test::testArray(int op) {
   ofstream file(path);
   if (file.is_open())
   {
-    file << "1\n"
+    file << "1\n";
     file << op <<"\n";
     int size = (rand() % 20)+1;
     file << "0 " + to_string(size) + "\n";
@@ -67,7 +67,7 @@ void Test::testForwardList(int op) {
   if (file.is_open())
   {
     int count = 0;
-    file << "2\n"
+    file << "2\n";
     file << op <<"\n";
     file << "0\n";                            //Constructor
     for(int i = 0; i < 5; i++) {
@@ -117,7 +117,7 @@ void Test::testList(int op) {
   if (file.is_open())
   {
     int count = 0;
-    file << "3\n"
+    file << "3\n";
     file << op <<"\n";
     file << "0\n";                            //Constructor
     for(int i = 0; i < op/40; i++) {
