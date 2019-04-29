@@ -248,7 +248,7 @@ void testForwardList(struct testCase* t)
     }
 
     cout<<t->operations[0][1];
-    pSList <int> sll();
+    pSList <int> sll;
     sll.printList();
 
     for(int i = 1 ; i < t->numOfOperations ; i++)
@@ -278,7 +278,7 @@ void testForwardList(struct testCase* t)
             }
         case 5:
             {
-                dll.insertAfter(t->operations[i][1], t->operations[i][2]);
+                sll.insertAfter(t->operations[i][1], t->operations[i][2]);
                 break;
             }
         case 6:
@@ -316,7 +316,7 @@ void testForwardList(struct testCase* t)
                 cout<<"default";
             }
         }
-        arr.printArray();
+        sll.printList();
     }
 
 }
