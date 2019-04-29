@@ -71,24 +71,6 @@ public:
 
         omp_unset_lock(&(Head->nodeLock));
         omp_unset_lock(&(p->next->nodeLock));
-        // pSListNode<T>* node = new pSListNode<T>(element);
-        // omp_init_lock(&(node->nodeLock));
-        //
-        // if(List_Size == 0) {
-        //   omp_set_lock(&(Head->nodeLock));
-        //   node->next = Head->next;
-        //   Head->next = node;
-        //   omp_unset_lock(&(Head->nodeLock));
-        // }
-        // else {
-        //   omp_set_lock(&(Head->nodeLock));
-        //   omp_set_lock(&(Head->next->nodeLock));
-        //   node->next = Head->next;
-        //   Head->next = node;
-        //   omp_unset_lock(&(Head->nodeLock));
-        //   omp_unset_lock(&(Head->next->nodeLock));
-        // }
-        // List_Size++;
       }
     }
 
@@ -97,7 +79,7 @@ public:
     */
     void popFront() {
       if(List_Size == 0) {
-        cout<<"List is empty!";
+        cout<<"List is empty!"<<endl;
         return;
       }
       else {
@@ -105,6 +87,7 @@ public:
         omp_set_lock(&(Head->next->nodeLock));
         omp_set_lock(&(Head->next->next->nodeLock));
         pSListNode<T>* node = Head->next;
+        cout<<"Popped "<< node->data<<endl;
         Head->next = node->next;
         omp_unset_lock(&(Head->nodeLock));
         omp_unset_lock(&(Head->next->nodeLock));
