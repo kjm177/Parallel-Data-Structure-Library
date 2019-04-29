@@ -1,0 +1,45 @@
+Array
+0 Constructor
+1 Array Element Assignment  //Insert arg2 at index arg1
+2 Get Array Size
+3 Is Empty
+4 Front
+5 Back
+6 At                        //Retrieve element at index arg1
+7 Fill                      //Fill array with arg1
+8 Sort                      //Sort asc if arg1=1 else desc
+9 Reverse
+10 Print All
+
+Forward List
+0 Constructor
+1 Get List Size
+2 Is Empty
+3 PushFront                 //Push Front element in arg1
+4 PopFront
+5 insertAfter               //Insert element arg2 after index arg1
+6 getIndex                  //Retrieve element at index arg1
+7 Front
+8 Reverse
+9 Erase                     //Delete element at index arg1
+10 Unique
+11 Sort                     //Sort asc if arg1=1 else desc
+12 Print All
+
+List
+0 Constructor
+1 Get List Size
+2 Is Empty
+3 PushFront                //Push Front element in arg1
+4 pushBack                 //Push Back element in arg1
+5 PopFront
+6 popBack
+7 insertAt                 //Insert element arg1 at index arg2
+8 getIndex                 //Retrieve element at index arg1
+9 Front
+10 Back
+11 Reverse
+12 EraseAt                 //Delete element at index arg1
+13 Unique
+14 Sort                    //Sort asc if arg1=1 else desc
+15 Print All
