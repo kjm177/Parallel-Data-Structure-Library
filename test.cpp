@@ -86,11 +86,17 @@ void Test::testForwardList(int op) {
        else if(num == 5) {                   //Insert at index arg1, element arg2
          arg1 = rand_int_generator(size);
          arg2 = rand_int_generator(200);
+         size++;
          file << "5 " + to_string(arg1) + " " + to_string(arg2) + "\n";
        }
        else if(num == 6) {                   //Get element at index arg1
          arg1 = rand_int_generator(size);
          file << "6 " + to_string(arg1) + "\n";
+       }
+       else if(num == 9) {                   //Erase element at index arg1
+         arg1 = rand_int_generator(size);
+         size--;
+         file << "9 " + to_string(arg1) + "\n";
        }
        else if(num == 11) {                   //Sort asc if arg1=1 else desc
          arg1 = rand_int_generator(2);
@@ -133,18 +139,24 @@ void Test::testList(int op) {
          file << to_string(num) + " " + to_string(arg1) + "\n";
          size++;
        }
-       else if(num == 5) {                   //Insert at index arg1, element arg2
-         arg1 = rand_int_generator(size);
-         arg2 = rand_int_generator(200);
-         file << "5 " + to_string(arg1) + " " + to_string(arg2) + "\n";
+       else if(num == 7) {                   //Insert at index arg1, element arg2
+         arg1 = rand_int_generator(200);
+         arg2 = rand_int_generator(size);
+         size++;
+         file << to_string(num) + " " + to_string(arg1) + " " + to_string(arg2) + "\n";
        }
-       else if(num == 6) {                   //Get element at index arg1
+       else if(num == 8) {                   //Get element at index arg1
          arg1 = rand_int_generator(size);
-         file << "6 " + to_string(arg1) + "\n";
+         file << "8 " + to_string(arg1) + "\n";
        }
-       else if(num == 11) {                   //Sort asc if arg1=1 else desc
+       else if(num == 12) {                   //Sort asc if arg1=1 else desc
+         arg1 = rand_int_generator(size);
+         size--;
+         file << "12 " + to_string(arg1) + "\n";
+       }
+       else if(num == 14) {                   //Sort asc if arg1=1 else desc
          arg1 = rand_int_generator(2);
-         file << "11 " + to_string(arg1) + "\n";
+         file << "14 " + to_string(arg1) + "\n";
        }
        else {
          file << to_string(num) + "\n";
