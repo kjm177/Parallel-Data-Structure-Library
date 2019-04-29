@@ -270,11 +270,13 @@ void testForwardList(struct testCase* t)
         case 3:
             {
                 sll.pushFront(t->operations[i][1]);
+                sll.printList();
                 break;
             }
         case 4:
             {
                 sll.popFront();
+                sll.printList();
                 break;
             }
         case 5:
@@ -317,7 +319,6 @@ void testForwardList(struct testCase* t)
                 cout<<"default";
             }
         }
-        sll.printList();
     }
 
 }
