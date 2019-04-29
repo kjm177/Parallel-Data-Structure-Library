@@ -70,7 +70,7 @@ struct testCase* readInput(string inputFileName)
     return newTestCase;
 }
 
-void testList(struct testCase* t)
+void testList(struct testCase* t, int numThreads)
 {
     if(t->numOfOperations < 1)
     {
@@ -82,7 +82,7 @@ void testList(struct testCase* t)
     pList <int> dll;
     dll.printList();
 
-#pragma omp parallel for num_threads(5)
+#pragma omp parallel for num_threads(numThreads)
     for(int i = 1 ; i < t->numOfOperations ; i++)
     {
         //cout<<i<<" ";
@@ -171,7 +171,7 @@ void testList(struct testCase* t)
 
 }
 
-void testArray(struct testCase* t)
+void testArray(struct testCase* t, int numThreads)
 {
     if(t->numOfOperations < 1)
     {
@@ -243,7 +243,7 @@ void testArray(struct testCase* t)
 
 }
 
-void testForwardList(struct testCase* t)
+void testForwardList(struct testCase* t, int numThreads)
 {
     if(t->numOfOperations < 1)
     {
@@ -253,7 +253,7 @@ void testForwardList(struct testCase* t)
 
     pSList <int> sll;
 
-#pragma omp parallel for num_threads(5)
+#pragma omp parallel for num_threads(numThreads)
     for(int i = 1 ; i < t->numOfOperations ; i++)
     {
         switch(t->operations[i][0])

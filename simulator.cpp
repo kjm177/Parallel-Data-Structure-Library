@@ -33,19 +33,19 @@ int main(int argc, char* argv[])
 
     //cout<<"DS: "<<t->dataStructure<<endl;
     //cout<<"NumOfOperations: "<<t->numOfOperations<<endl;
-    for(int i = 0 ; i < t->numOfOperations ; i++)
-    {
-        for(int j = 0 ; j < (t->operations[i]).size() ; j++)
+//for(int i = 0 ; i < t->numOfOperations ; i++)
+   // {
+     //   for(int j = 0 ; j < (t->operations[i]).size() ; j++)
             //cout<<t->operations[i][j]<<" ";
             //cout<<endl;
-    }
+    //}
 
     if(t->dataStructure == 1)
-        testArray(t);
+        testArray(t, numOfThreads);
     else if(t->dataStructure == 2)
-        testForwardList(t);
+        testForwardList(t, numOfThreads);
     else
-        testList(t);
+        testList(t, numOfThreads);
 
 
     return 0;
