@@ -127,7 +127,7 @@ void Test::testList(int op) {
       count++;
     }
     for(int i = 0; i < op-count; i++) {
-       num = rand_int_generator(13) + 1;
+       num = rand_int_generator(14) + 1;
        if(num == 3 || num == 4) {                        //Push Front or back element in arg1
          arg1 = rand_int_generator(200);
          file << to_string(num) + " " + to_string(arg1) + "\n";
