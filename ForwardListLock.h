@@ -166,7 +166,7 @@ public:
       omp_init_lock(&(p->nodeLock));
       p->next = it;
       prev->next = p;
-      List_Lize++;
+      List_Size++;
       omp_unset_lock(&(prev->nodeLock));
       omp_unset_lock(&(it->nodeLock));
     }
