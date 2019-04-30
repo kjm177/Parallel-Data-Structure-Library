@@ -256,6 +256,7 @@ void testForwardList(struct testCase* t, int numThreads)
 #pragma omp parallel for num_threads(numThreads)
     for(int i = 1 ; i < t->numOfOperations ; i++)
     {
+        cout<<"HERE"<<endl;
         switch(t->operations[i][0])
         {
         case 1:
