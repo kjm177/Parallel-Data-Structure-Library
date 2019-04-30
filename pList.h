@@ -147,6 +147,11 @@ Constructor for generic doubly linked list type T
         omp_set_lock(&(pListTail->prev->nodeLock));
         omp_set_lock(&(pListTail->nodeLock));
 
+        if(pListTail->prev->data == sentinalInt)
+        {
+            //cout<<"ERROR! List is empty"<<endl;
+            return;
+        }
         pListNode<T>* p = pListTail;
         pListTail = p->prev;
         p->prev->next = NULL;
