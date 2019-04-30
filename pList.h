@@ -332,10 +332,10 @@ Constructor for generic doubly linked list type T
 
 
 
-    pList<T> reverseList()
+    vector<T> reverseList()
     {
         //cout<<"NOT READY!"<<endl;
-        pList<T> reversedList;
+        vector<T> reversedList;
         pListNode<T>* it = pListHead;
         omp_set_lock(&(it->nodeLock));
         pListNode<T>* prev;
@@ -344,7 +344,7 @@ Constructor for generic doubly linked list type T
         {
             prev = it;
             if(it->data != sentinalInt)
-                reversedList.pushFront(it->data);
+                reversedList.insert(reversedList.begin(), it->data);
             it = it->next;
             if(it)
                 omp_set_lock(&(it->nodeLock));

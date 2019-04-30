@@ -140,7 +140,7 @@ void testList(struct testCase* t, int numThreads)
             }
         case 11:
             {
-                pList <int> dll2 = dll.reverseList();
+                vector <int> dllCopy = dll.reverseList();
                 break;
             }
         case 12:
