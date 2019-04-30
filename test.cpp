@@ -12,7 +12,7 @@ int rand_int_generator(int N) {
   return rand()%N;
 }
 
-void Test::testArray(int op) {
+void Test::Array(int op) {
   string path = "test_array_" + to_string(op) + ".txt";
   ofstream file(path);
   if (file.is_open())
@@ -58,7 +58,7 @@ void Test::testArray(int op) {
 }
 
 
-void Test::testForwardList(int op) {
+void Test::ForwardList(int op) {
   string path = "test_forwardlist_" + to_string(op) + ".txt";
   ofstream file(path);
 
@@ -114,7 +114,7 @@ void Test::testForwardList(int op) {
 }
 
 
-void Test::testList(int op) {
+void Test::List(int op) {
   string path = "test_list_" + to_string(op) + ".txt";
   ofstream file(path);
 
