@@ -397,7 +397,7 @@ void testForwardList(struct testCase* t, int numThreads)
             }
         case 5:
             {
-                sll.insertAfter(t->operations[i][1], t->operations[i][2]);
+                sll.insertAt(t->operations[i][1], t->operations[i][2]);
                 break;
             }
         case 6:
@@ -419,7 +419,7 @@ void testForwardList(struct testCase* t, int numThreads)
             }
         case 9:
             {
-                sll.erase(t->operations[i][1]);
+                sll.eraseAt(t->operations[i][1]);
                 break;
             }
         case 10:

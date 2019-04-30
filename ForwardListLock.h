@@ -111,104 +111,98 @@ public:
           List_Size--;
 
           omp_usnset_lock(&(Head->nodeLock));
-          // Head->next = node->next;
-          // omp_unset_lock(&(Head->nodeLock));
-          // omp_unset_lock(&(Head->next->nodeLock));
-          // free(node);
-          // List_Size--;
         }
       }
-    }
-
-
-    /**
-    Adds element of type T at position 'index'
-    */
-    void insertAfter(int index, T element) {
-          if(index >= 0 && index <= List_Size) {
-            if(index == 0) pushFront(element);
-            else {
-              pSListNode<T>* it = Head;
-              pSListNode<T>* temp;
-              int i = 0;
-              while(it && i < index) {
-                temp = it;
-                it = it->next;
-                i++;
-              }
-              pSListNode<T>* node = new pSListNode<T>(element);
-              omp_set_lock(&(temp->nodeLock));
-              omp_set_lock(&(it->nodeLock));
-              temp->next = node;
-              node->next = it;
-              omp_unset_lock(&(temp->nodeLock));
-              omp_unset_lock(&(it->nodeLock));
-              List_Size++;
-            }
-          }
-          else
-            cout<<"List index out of bound!"<<endl;
-    }
-
-    /**
-    Returns element at position 'index'
-    */
-    T getIndex(int index) {
-      if(index >= 0 && index < List_Size) {
-        pSListNode<T>* it = Head;
-        int i = 0;
-        while(it && i < index) {
-          it = it->next;
-          i++;
-        }
-        return it->data;
-      }
-      else
-      {
-          cout<<"List index out of bound!"<<endl;
-          return dummy->data;
-      }
-    }
-
-    /**
-    Erases element at position 'index'
-    */
-    void erase(int index) {
-      if(index >= 0 && index < List_Size) {
-        if(index == 0) popFront();
-        else {
-          pSListNode<T>* it = Head->next;
-          pSListNode<T>* temp = Head;
-          int i = 0;
-          while(it && i < index) {
-            temp = it;
-            it = it->next;
-            i++;
-          }
-          omp_set_lock(&(temp->nodeLock));
-          omp_set_lock(&(it->nodeLock));
-          temp->next = it->next;
-          free(it);
-          omp_unset_lock(&(temp->nodeLock));
-          List_Size--;
-        }
-      }
-      else
-          cout<<"List index out of bound!"<<endl;
     }
 
     /**
     Returns element at the front of the list
     */
     T front() {
-      if(List_Size == 0) {
-        cout<<"List is empty!"<<endl;
-        return  dummy->data;
+      return Head->next->data;
+    }
+
+    /**
+    Returns element at position 'index'
+    */
+    T getIndex(int index) {
+
+      if(List_Size == 0 || index < 0 || index >= List_Size) {
+        return dummy->data;
       }
-      else
+      pSListNode<T>* it = Head->next;
+      while(index && it) {
+        it = it->next;
+        index--;
+      }
+      if(it) return it->data;
+
+      return dummy->data;
+    }
+
+
+    /**
+    Adds element of type T at position 'index'
+    */
+    void insertAt(T element, int index) {
+
+      if(index < 0 || index > List_Size) return;
+
+      pSListNode<T>* prev = Head;
+      pSListNode<T>* it = prev->next;
+
+      while(index) {
+        if(!it) return;
+        prev = it;
+        it = it->next;
+        index--;
+      }
+      #pragma omp critical
       {
-        return Head->next->data;
+        omp_set_lock(&(prev->nodeLock));
+        omp_set_lock(&(it->nodeLock));
       }
+      pSListNode<T>* p = new pSListNode<T>(element);
+      omp_init_lock(&(p->nodeLock));
+      p->next = it;
+      prev->next = p;
+      List_Lize++;
+      omp_unset_lock(&(prev->nodeLock));
+      omp_unset_lock(&(it->nodeLock));
+    }
+
+
+    /**
+    Erases element at position 'index'
+    */
+    void eraseAt(int index) {
+      if(index >= 0 && index < List_Size) {
+        pSListNode<T>* prev = Head;
+        pSListNode<T>* it = prev->next;
+
+        while(index) {
+          if(!it) return;
+          prev = it;
+          it = it->next;
+          index--;
+        }
+
+        if(!it || it->data == sentinalInt) return;
+
+        #pragma omp critical
+        {
+          omp_set_lock(&(prev->nodeLock));
+          omp_set_lock(&(it->nodeLock));
+          omp_set_lock(&(it->next->nodeLock));
+        }
+
+        prev->next = it->next;
+        free(it);
+        List_Size--;
+        omp_unset_lock(&(prev->nodeLock));
+        omp_unset_lock(&(prev->next->nodeLock));
+      }
+      else return;
     }
 
     /**

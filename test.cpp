@@ -85,9 +85,9 @@ void Test::ForwardList(int op) {
          file << "3 " + to_string(arg1) + "\n";
          size++;
        }
-       else if(num == 5) {                   //Insert at index arg1, element arg2
-         arg1 = rand_int_generator(size);
-         arg2 = rand_int_generator(elementRange);
+       else if(num == 5) {                   //Insert element arg1 ar index arg2
+         arg1 = rand_int_generator(elementRange);
+         arg2 = rand_int_generator(size);
          size++;
          file << "5 " + to_string(arg1) + " " + to_string(arg2) + "\n";
        }
