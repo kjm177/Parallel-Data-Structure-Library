@@ -112,30 +112,24 @@ Constructor for generic doubly linked list type T
     {
         #pragma omp critical
         {
-            if(pListSize == 0)
+            if(pListSize != 0)
             {
-                //cout<<"ERROR! List is empty!"<<endl;
-                return;
+                omp_set_lock(&(pListHead->nodeLock));
+                omp_set_lock(&(pListHead->next->nodeLock));
+
+                if(pListHead->next->data != sentinalInt)
+                {
+                    pListNode<T>* p = pListHead;
+                    pListHead = p->next;
+                    p->next->prev = NULL;
+                    pListHead->data = sentinalInt;
+
+                    free(p);
+                    pListSize--;
+
+                    omp_unset_lock(&(pListHead->nodeLock));
+                }
             }
-
-            omp_set_lock(&(pListHead->nodeLock));
-            omp_set_lock(&(pListHead->next->nodeLock));
-
-            if(pListHead->next->data == sentinalInt)
-            {
-                //cout<<"ERROR! List is empty"<<endl;
-                return;
-            }
-
-            pListNode<T>* p = pListHead;
-            pListHead = p->next;
-            p->next->prev = NULL;
-            pListHead->data = sentinalInt;
-
-            free(p);
-            pListSize--;
-
-            omp_unset_lock(&(pListHead->nodeLock));
         }
     }
 
@@ -143,27 +137,22 @@ Constructor for generic doubly linked list type T
     {
         #pragma omp critical
         {
-            if(pListSize == 0)
+            if(pListSize != 0)
             {
-                //cout<<"ERROR! List is empty!"<<endl;
-                return;
-            }
+                omp_set_lock(&(pListTail->prev->nodeLock));
+                omp_set_lock(&(pListTail->nodeLock));
 
-            omp_set_lock(&(pListTail->prev->nodeLock));
-            omp_set_lock(&(pListTail->nodeLock));
-
-            if(pListTail->prev->data == sentinalInt)
-            {
-                //cout<<"ERROR! List is empty"<<endl;
-                return;
+                if(pListTail->prev->data != sentinalInt)
+                {
+                    pListNode<T>* p = pListTail;
+                    pListTail = p->prev;
+                    p->prev->next = NULL;
+                    pListTail->data = sentinalInt;
+                    free(p);
+                    pListSize--;
+                    omp_unset_lock(&(pListTail->nodeLock));
+                }
             }
-            pListNode<T>* p = pListTail;
-            pListTail = p->prev;
-            p->prev->next = NULL;
-            pListTail->data = sentinalInt;
-            free(p);
-            pListSize--;
-            omp_unset_lock(&(pListTail->nodeLock));
         }
     }
 
