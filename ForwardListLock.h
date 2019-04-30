@@ -102,7 +102,7 @@ public:
         // omp_set_lock(&(Head->next->next->nodeLock));
         if(Head->next->data != sentinalInt) {
 
-          cout<<"Popped "<< node->next->data<<endl;
+          cout<<"Popped "<<Head->next->data<<endl;
 
           pSListNode<T>* node = Head;
           Head = node->next;
@@ -110,7 +110,7 @@ public:
           free(node);
           List_Size--;
 
-          omp_usnset_lock(&(Head->nodeLock));
+          omp_unset_lock(&(Head->nodeLock));
         }
       }
     }
