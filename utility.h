@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <unordered_set>
 #include <omp.h>
 #include "ForwardListLock.h"
 #include "pList.h"
@@ -150,7 +151,7 @@ void testList(struct testCase* t, int numThreads)
             }
         case 13:
             {
-                dll.uniqueList();
+                unordered_set<int> s = dll.uniqueList();
                 break;
             }
         case 14:
