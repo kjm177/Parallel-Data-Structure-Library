@@ -166,8 +166,7 @@ void testList(struct testCase* t, int numThreads)
         //dll.printList();
     }
     cout<<endl;
-    cout<<"Final Doubly linked list: "<<endl;
-    dll.printList();
+    cout<<"Final Doubly linked list size: "<<dll.listSize()<<endl;
 
 }
 
