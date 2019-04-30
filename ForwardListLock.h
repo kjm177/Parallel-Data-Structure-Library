@@ -1,5 +1,6 @@
 #include <iostream>
 #include <set>
+#include <omp.h>
 
 #ifndef pForwardList_h
 #define pForwardList_h
@@ -97,14 +98,25 @@ public:
       else {
         omp_set_lock(&(Head->nodeLock));
         omp_set_lock(&(Head->next->nodeLock));
-        omp_set_lock(&(Head->next->next->nodeLock));
-        pSListNode<T>* node = Head->next;
-        cout<<"Popped "<< node->data<<endl;
-        Head->next = node->next;
-        omp_unset_lock(&(Head->nodeLock));
-        omp_unset_lock(&(Head->next->nodeLock));
-        free(node);
-        List_Size--;
+
+        // omp_set_lock(&(Head->next->next->nodeLock));
+        if(Head->next->data != sentinalInt) {
+
+          cout<<"Popped "<< node->next->data<<endl;
+
+          pSListNode<T>* node = Head;
+          Head = node->next;
+          Head->data = sentinalInt;
+          free(node);
+          List_Size--;
+
+          omp_usnset_lock(&(Head->nodeLock));
+          // Head->next = node->next;
+          // omp_unset_lock(&(Head->nodeLock));
+          // omp_unset_lock(&(Head->next->nodeLock));
+          // free(node);
+          // List_Size--;
+        }
       }
     }
 
