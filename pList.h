@@ -337,10 +337,10 @@ Constructor for generic doubly linked list type T
 
 
 
-    pList<T> reverseList()
+    vector<T> reverseList()
     {
         //cout<<"NOT READY!"<<endl;
-        pList<T> reversedList;
+        vector<T> reversedList;
         pListNode<T>* it;
         pListNode<T>* prev;
         #pragma omp critical
@@ -352,7 +352,7 @@ Constructor for generic doubly linked list type T
         while(it != NULL)
         {
             prev = it;
-            reversedList.pushFront(it->data);
+            reversedList.insert(reversedList.begin(), it->data);
             it = it->next;
             if(it)
                 omp_set_lock(&(it->nodeLock));
@@ -364,10 +364,9 @@ Constructor for generic doubly linked list type T
         return reversedList;
     }
 
-    pList<T> uniqueList()
+    unordered_set<T> uniqueList()
     {
         //cout<<"NOT READY!"<<endl;
-        pList<T> s;
         pListNode<T>* it;
         pListNode<T>* prev;
         unordered_set<T> hashSet;
@@ -382,7 +381,6 @@ Constructor for generic doubly linked list type T
             prev = it;
             if(hashSet.find(it->data) == hashSet.end())
             {
-                s.pushBack(it->data);
                 hashSet.insert(it->data);
             }
             it = it->next;
@@ -393,7 +391,7 @@ Constructor for generic doubly linked list type T
 
         omp_unset_lock(&(prev->nodeLock));
 
-        return s;
+        return hashSet;
     }
 
 
