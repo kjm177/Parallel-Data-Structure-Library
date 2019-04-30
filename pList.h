@@ -118,19 +118,22 @@ Constructor for generic doubly linked list type T
 
         omp_set_lock(&(pListHead->nodeLock));
         omp_set_lock(&(pListHead->next->nodeLock));
-        omp_set_lock(&(pListHead->next->next->nodeLock));
 
-        pListNode<T>* p = pListHead->next;
-        pListHead->next = p->next;
-        p->next->prev = pListHead;
+        if(pListHead->next->data == sentinalInt)
+        {
+            //cout<<"ERROR! List is empty"<<endl;
+            return;
+        }
+
+        pListNode<T>* p = pListHead;
+        pListHead = p->next;
+        p->next->prev = NULL;
+        pListHead->data = sentinalInt;
 
         free(p);
         pListSize--;
 
         omp_unset_lock(&(pListHead->nodeLock));
-        omp_unset_lock(&(pListHead->next->nodeLock));
-
-
     }
 
     void popBack()
@@ -141,20 +144,15 @@ Constructor for generic doubly linked list type T
             return;
         }
 
-
-        omp_set_lock(&(pListTail->prev->prev->nodeLock));
         omp_set_lock(&(pListTail->prev->nodeLock));
         omp_set_lock(&(pListTail->nodeLock));
 
-        pListNode<T>* p = pListTail->prev;
-        pListTail->prev = p->prev;
-        p->prev->next = pListTail;
-
-        omp_unset_lock(&(pListTail->nodeLock));
-        omp_unset_lock(&(pListTail->prev->nodeLock));
-
+        pListNode<T>* p = pListTail;
+        pListTail = p->prev;
+        p->prev->next = NULL;
         free(p);
         pListSize--;
+        omp_unset_lock(&(pListTail->nodeLock));
     }
 
     T front()
