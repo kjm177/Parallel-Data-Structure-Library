@@ -177,13 +177,13 @@ int main(int argc, char* argv[]) {
     Test t;
     switch(argv[1][0]) {
       case 'a':
-        t.testArray(atoi(argv[2]));
+        t.Array(atoi(argv[2]));
         break;
       case 's':
-        t.testForwardList(atoi(argv[2]));
+        t.ForwardList(atoi(argv[2]));
         break;
       case 'd':
-        t.testList(atoi(argv[2]));
+        t.List(atoi(argv[2]));
         break;
       default:
         cout<<"default";
