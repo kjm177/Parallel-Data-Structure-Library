@@ -76,7 +76,7 @@ void Test::testForwardList(int op) {
       size++;
       count++;
     }
-    for(int i = 0; i < op-count; i++) {
+    for(int i = 0; i < op-count-1; i++) {
        num = rand_int_generator(11) + 1;
        if(num == 3) {                        //Push Front element in arg1
          arg1 = rand_int_generator(200);
@@ -132,7 +132,7 @@ void Test::testList(int op) {
       size++;
       count++;
     }
-    for(int i = 0; i < op-count; i++) {
+    for(int i = 0; i < op-count-1; i++) {
        num = rand_int_generator(14) + 1;
        if(num == 3 || num == 4) {                        //Push Front or back element in arg1
          arg1 = rand_int_generator(200);
