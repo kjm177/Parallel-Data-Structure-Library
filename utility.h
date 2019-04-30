@@ -141,7 +141,7 @@ void testList(struct testCase* t, int numThreads)
             }
         case 11:
             {
-                vector <int> dllCopy = dll.reverseList();
+                pList<int> dllReversed = dll.reverseList();
                 break;
             }
         case 12:
@@ -151,7 +151,7 @@ void testList(struct testCase* t, int numThreads)
             }
         case 13:
             {
-                unordered_set<int> s = dll.uniqueList();
+                pList<int> dllUnique = dll.uniqueList();
                 break;
             }
         case 14:
