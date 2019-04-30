@@ -170,7 +170,7 @@ Constructor for generic doubly linked list type T
         if(pListSize == 0 || index < 0 || index >= pListSize)
         {
             //cout<<"Index out of bounds"<<endl;
-            return dummy->data;
+            return sentinalInt;
         }
         pListLockNode<T>* it = pListHead->next;
         while(index && it)
@@ -180,7 +180,7 @@ Constructor for generic doubly linked list type T
         }
         if(it)
             return it->data;
-        return dummy->data;
+        return sentinalInt;
     }
 
     void insertAt(T element, int index)
