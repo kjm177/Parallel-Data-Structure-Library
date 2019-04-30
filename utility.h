@@ -6,10 +6,12 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <unordered_set>
 #include <omp.h>
 #include "ForwardListLock.h"
 #include "pList.h"
 #include "pArray.h"
+#include "pListLock.h"
 
 using namespace std;
 
@@ -140,7 +142,112 @@ void testList(struct testCase* t, int numThreads)
             }
         case 11:
             {
-                vector <int> dllCopy = dll.reverseList();
+                vector <int> dllReversed = dll.reverseList();
+                break;
+            }
+        case 12:
+            {
+                dll.eraseAt(t->operations[i][1]);
+                break;
+            }
+        case 13:
+            {
+                unordered_set<int> dllUnique = dll.uniqueList();
+                break;
+            }
+        case 14:
+            {
+                dll.sortList(t->operations[i][1]);
+                break;
+            }
+        case 15:
+            {
+                bool present = dll.searchElement(t->operations[i][1]);
+                break;
+            }
+        default:
+            {
+                cout<<"default";
+            }
+        }
+        //dll.printList();
+    }
+    cout<<endl;
+    cout<<"Final Doubly linked list size: "<<dll.listSize()<<endl;
+
+}
+
+void testListLock(struct testCase* t, int numThreads)
+{
+    if(t->numOfOperations < 1)
+    {
+        cout<<"ERROR! No operations in test case!"<<endl;
+        return;
+    }
+
+    //cout<<t->operations[0][1];
+    pListLock <int> dll;
+    dll.printList();
+
+#pragma omp parallel for num_threads(numThreads)
+    for(int i = 1 ; i < t->numOfOperations ; i++)
+    {
+        //cout<<i<<" ";
+        switch(t->operations[i][0])
+        {
+        case 1:
+            {
+                int s = dll.listSize();
+                break;
+            }
+        case 2:
+            {
+                bool check = dll.isEmpty();
+                break;
+            }
+        case 3:
+            {
+                dll.pushFront(t->operations[i][1]);
+                break;
+            }
+        case 4:
+            {
+                dll.pushBack(t->operations[i][1]);
+                break;
+            }
+        case 5:
+            {
+                dll.popFront();
+                break;
+            }
+        case 6:
+            {
+                dll.popBack();
+                break;
+            }
+        case 7:
+            {
+                dll.insertAt(t->operations[i][1], t->operations[i][2]);
+                break;
+            }
+        case 8:
+            {
+                dll.getIndex(t->operations[i][1]);
+                break;
+            }
+        case 9:
+            {
+                int element = dll.front();
+                break;
+            }
+        case 10:
+            {
+                int element = dll.back();
+                break;
+            }
+        case 11:
+            {
+                dll.reverseList();
                 break;
             }
         case 12:
@@ -158,6 +265,11 @@ void testList(struct testCase* t, int numThreads)
                 dll.sortList(t->operations[i][1]);
                 break;
             }
+        case 15:
+            {
+                bool present = dll.searchElement(t->operations[i][1]);
+                break;
+            }
         default:
             {
                 cout<<"default";
@@ -169,6 +281,7 @@ void testList(struct testCase* t, int numThreads)
     cout<<"Final Doubly linked list size: "<<dll.listSize()<<endl;
 
 }
+
 
 void testArray(struct testCase* t, int numThreads)
 {

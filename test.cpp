@@ -8,6 +8,7 @@
 
 using namespace std;
 
+#define elementRange 1000
 
 int rand_int_generator(int N) {
   return rand()%N;
@@ -24,7 +25,7 @@ void Test::Array(int op) {
     file << "0 " + to_string(size) + "\n";
     file << "7 0\n";                          //Constructor
     for(int i = 0; i < size; i++) {
-      int num = rand_int_generator(200);
+      int num = rand_int_generator(elementRange);
       file << "1 " + to_string(num) + "\n";   //Fill array with 0
     }
     int num, arg1, arg2;
@@ -32,7 +33,7 @@ void Test::Array(int op) {
        num = rand_int_generator(8) + 2;
        if(num == 1) {                         //Insert arg2 at index arg1
          arg1 = rand_int_generator(size-1);
-         arg2 = rand_int_generator(200);
+         arg2 = rand_int_generator(elementRange);
          file << "1 " + to_string(arg1) + " " + to_string(arg2) + "\n";
        }
        else if(num == 6) {                    //Retrieve element at arg1
@@ -40,7 +41,7 @@ void Test::Array(int op) {
          file << "6 " + to_string(arg1) + "\n";
        }
        else if(num == 7) {                    //Fill array with arg1
-         arg1 = rand_int_generator(200);
+         arg1 = rand_int_generator(elementRange);
          file << "7 " + to_string(arg1) + "\n";
        }
        else if(num == 8) {                    //Sort asc if arg1=1 else desc
@@ -72,7 +73,7 @@ void Test::ForwardList(int op) {
     file << op <<"\n";
     file << "0\n";                            //Constructor
     for(int i = 0; i < 5; i++) {
-      int num = rand_int_generator(200);
+      int num = rand_int_generator(elementRange);
       file << "3 " + to_string(num) + "\n";   //Push front 5 random numbers to list
       size++;
       count++;
@@ -80,13 +81,13 @@ void Test::ForwardList(int op) {
     for(int i = 0; i < op-count-1; i++) {
        num = rand_int_generator(11) + 1;
        if(num == 3) {                        //Push Front element in arg1
-         arg1 = rand_int_generator(200);
+         arg1 = rand_int_generator(elementRange);
          file << "3 " + to_string(arg1) + "\n";
          size++;
        }
        else if(num == 5) {                   //Insert at index arg1, element arg2
          arg1 = rand_int_generator(size);
-         arg2 = rand_int_generator(200);
+         arg2 = rand_int_generator(elementRange);
          size++;
          file << "5 " + to_string(arg1) + " " + to_string(arg2) + "\n";
        }
@@ -128,20 +129,20 @@ void Test::List(int op) {
     file << op <<"\n";
     file << "0\n";                            //Constructor
     for(int i = 0; i < op/40; i++) {
-      int num = rand_int_generator(200);
+      int num = rand_int_generator(elementRange);
       file << "3 " + to_string(num) + "\n";   //Push front 5 random numbers to list
       size++;
       count++;
     }
     for(int i = 0; i < op-count-1; i++) {
-       num = rand_int_generator(14) + 1;
+       num = rand_int_generator(15) + 1;
        if(num == 3 || num == 4) {                        //Push Front or back element in arg1
-         arg1 = rand_int_generator(200);
+         arg1 = rand_int_generator(elementRange);
          file << to_string(num) + " " + to_string(arg1) + "\n";
          size++;
        }
        else if(num == 7) {                   //Insert at index arg1, element arg2
-         arg1 = rand_int_generator(200);
+         arg1 = rand_int_generator(elementRange);
          arg2 = rand_int_generator(size);
          size++;
          file << to_string(num) + " " + to_string(arg1) + " " + to_string(arg2) + "\n";
@@ -158,6 +159,11 @@ void Test::List(int op) {
        else if(num == 14) {                   //Sort asc if arg1=1 else desc
          arg1 = rand_int_generator(2);
          file << "14 " + to_string(arg1) + "\n";
+       }
+       else if(num == 15)                  // search arg1 in list
+       {
+            arg1 = rand_int_generator(elementRange);
+            file << "15 " + to_string(arg1) + "\n";
        }
        else {
          file << to_string(num) + "\n";

@@ -221,9 +221,11 @@ Constructor for generic doubly linked list type T
             prev = it;
             it = it->next;
         }
-        omp_set_lock(&(prev->nodeLock));
-        omp_set_lock(&(it->nodeLock));
-
+        #pragma omp critical
+        {
+            omp_set_lock(&(prev->nodeLock));
+            omp_set_lock(&(it->nodeLock));
+        }
 
         pListNode<T>* p = new pListNode<T>(element);
         omp_init_lock(&(p->nodeLock));
@@ -266,9 +268,12 @@ Constructor for generic doubly linked list type T
             return;
         }
 
-        omp_set_lock(&(prev->nodeLock));
-        omp_set_lock(&(it->nodeLock));
-        omp_set_lock(&(it->next->nodeLock));
+        #pragma omp critical
+        {
+            omp_set_lock(&(prev->nodeLock));
+            omp_set_lock(&(it->nodeLock));
+            omp_set_lock(&(it->next->nodeLock));
+        }
 
         prev->next = it->next;
         it->next->prev = prev;
@@ -336,15 +341,18 @@ Constructor for generic doubly linked list type T
     {
         //cout<<"NOT READY!"<<endl;
         vector<T> reversedList;
-        pListNode<T>* it = pListHead;
-        omp_set_lock(&(it->nodeLock));
+        pListNode<T>* it;
         pListNode<T>* prev;
+        #pragma omp critical
+        {
+            omp_set_lock(&(pListHead->nodeLock));
+            it = pListHead;
+        }
 
         while(it != NULL)
         {
             prev = it;
-            if(it->data != sentinalInt)
-                reversedList.insert(reversedList.begin(), it->data);
+            reversedList.insert(reversedList.begin(), it->data);
             it = it->next;
             if(it)
                 omp_set_lock(&(it->nodeLock));
@@ -356,49 +364,34 @@ Constructor for generic doubly linked list type T
         return reversedList;
     }
 
-    void uniqueList()
+    unordered_set<T> uniqueList()
     {
-        //cout<<"NOT READY. Making list unique: "<<endl;
-        return;
-        unordered_set<T> s;
-        pListNode<T>* it = pListHead;
-        pListNode<T>* temp = NULL;
-        while(it)
+        //cout<<"NOT READY!"<<endl;
+        pListNode<T>* it;
+        pListNode<T>* prev;
+        unordered_set<T> hashSet;
+        #pragma omp critical
         {
-            pListNode<T>* next = it->next;
-            if(s.find(it->data) != s.end())
-            {
-                if(!temp)
-                {
-                    if(it->next)
-                    {
-                        pListHead = it->next;
-                        it->next->prev = NULL;
-                    }
-                    else
-                    {
-                        pListTail = NULL;
-                        pListTail = NULL;
-                    }
-                }
-                else
-                {
-                    temp->next = it->next;
-                    if(temp->next)
-                        temp->next->prev = temp;
-                    else
-                        pListTail = temp;
-                }
-                free(it);
-            }
-            else
-            {
-                s.insert(it->data);
-            }
-            if(next)
-                temp = next->prev;
-            it = next;
+            omp_set_lock(&(pListHead->nodeLock));
+            it = pListHead;
         }
+
+        while(it != NULL)
+        {
+            prev = it;
+            if(hashSet.find(it->data) == hashSet.end())
+            {
+                hashSet.insert(it->data);
+            }
+            it = it->next;
+            if(it)
+                omp_set_lock(&(it->nodeLock));
+            omp_unset_lock(&(prev->nodeLock));
+        }
+
+        omp_unset_lock(&(prev->nodeLock));
+
+        return hashSet;
     }
 
 
