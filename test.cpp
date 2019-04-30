@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+#include <time.h>
 #include "test.h"
 
 
@@ -169,6 +170,7 @@ void Test::List(int op) {
 }
 
 int main(int argc, char* argv[]) {
+  srand(time(NULL));
   if(argc != 3) {
     cout<<"Run as ./test <a/s/d> <# of ops>";
     exit(0);
