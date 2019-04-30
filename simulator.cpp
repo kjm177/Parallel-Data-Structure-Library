@@ -46,8 +46,8 @@ int main(int argc, char* argv[])
         testForwardList(t, numOfThreads);
     else if(t->dataStructure == 3)
         testList(t, numOfThreads);
-    else
-        testListLock(t,numOfThreads);
+   // else
+   //     testListLock(t,numOfThreads);
 
 
     return 0;

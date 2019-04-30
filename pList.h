@@ -7,7 +7,7 @@
 #include <vector>
 #include <omp.h>
 
-#define sentinalInt -9999999
+#define sentinalInt -99999999
 
 using namespace std;
 
@@ -220,6 +220,7 @@ Constructor for generic doubly linked list type T
             }
             prev = it;
             it = it->next;
+            index--;
         }
         #pragma omp critical
         {
@@ -260,6 +261,7 @@ Constructor for generic doubly linked list type T
             }
             prev = it;
             it = it->next;
+            //index--;
         }
 
         if(!it || it->data == sentinalInt)
