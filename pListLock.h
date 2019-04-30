@@ -94,12 +94,6 @@ Constructor for generic doubly linked list type T
         acquireLock();
         //cout<<"Pushing new element at back "<<endl;
         pListLockNode<T>* p = new pListLockNode<T>(element);
-        omp_init_lock(&(p->nodeLock));
-
-        omp_set_lock(&(pListTail->prev->nodeLock));
-        omp_set_lock(&(pListTail->nodeLock));
-
-
         p->prev = pListTail->prev;
         p->next = pListTail;
         pListTail->prev->next = p;
@@ -142,7 +136,6 @@ Constructor for generic doubly linked list type T
                 pListTail->data = sentinalInt;
                 free(p);
                 pListSize--;
-                omp_unset_lock(&(pListTail->nodeLock));
             }
             releaseLock();
         }
@@ -336,16 +329,16 @@ Constructor for generic doubly linked list type T
         pListHead = prev;
 
         releaseLock();
-        return reversedList;
+        return;
     }
 
-    unordered_set<T> uniqueList()
+    void uniqueList()
     {
         //cout<<"NOT READY!"<<endl;
         pListLockNode<T>* it;
         pListLockNode<T>* prev;
         unordered_set<T> hashSet;
-        return hashSet;
+        return;
         acquireLock();
 
         while(it != NULL)
@@ -360,7 +353,7 @@ Constructor for generic doubly linked list type T
 
         releaseLock();
 
-        return hashSet;
+        return;
     }
 
 

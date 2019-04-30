@@ -247,7 +247,7 @@ void testListLock(struct testCase* t, int numThreads)
             }
         case 11:
             {
-                vector <int> dllReversed = dll.reverseList();
+                dll.reverseList();
                 break;
             }
         case 12:
@@ -257,7 +257,7 @@ void testListLock(struct testCase* t, int numThreads)
             }
         case 13:
             {
-                unordered_set<int> dllUnique = dll.uniqueList();
+                dll.uniqueList();
                 break;
             }
         case 14:
