@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <unordered_set>
+#include <vector>
 #include <omp.h>
 
 #define sentinalInt -9999999
@@ -331,24 +332,28 @@ Constructor for generic doubly linked list type T
 
 
 
-    void reverseList()
+    pList<T> reverseList()
     {
         //cout<<"NOT READY!"<<endl;
-        return;
-        pListNode<T>* temp = NULL;
+        pList<T> reversedList;
         pListNode<T>* it = pListHead;
-        pListTail = it;
+        omp_set_lock(&(it->nodeLock));
+        pListNode<T>* prev;
 
         while(it != NULL)
         {
-            temp = it->prev;
-            it->prev = it->next;
-            it->next = temp;
-            it = it->prev;
+            prev = it;
+            if(it->data != sentinalInt)
+                reversedList.pushFront(it->data);
+            it = it->next;
+            if(it)
+                omp_set_lock(&(it->nodeLock));
+            omp_unset_lock(&(prev->nodeLock));
         }
 
-        if(temp != NULL)
-            pListHead = temp->prev;
+        omp_unset_lock(&(prev->nodeLock));
+
+        return reversedList;
     }
 
     void uniqueList()

@@ -140,7 +140,7 @@ void testList(struct testCase* t, int numThreads)
             }
         case 11:
             {
-                dll.reverseList();
+                pList <int> dll2 = dll.reverseList();
                 break;
             }
         case 12:
@@ -256,60 +256,59 @@ void testForwardList(struct testCase* t, int numThreads)
 #pragma omp parallel for num_threads(numThreads)
     for(int i = 1 ; i < t->numOfOperations ; i++)
     {
-        cout<<"HERE"<<endl;
         switch(t->operations[i][0])
         {
         case 1:
             {
-              int s = sll.listSize();
-              // cout<<"List size is "<<s<<endl;
-              break;
+                int s = sll.listSize();
+                cout<<"List size is "<<s<<endl;
+                break;
             }
         case 2:
             {
-              bool check = sll.isEmpty();
-              // if(check) cout<<"List is empty!"<<endl;
-              // else cout<<"List is not empty!"<<endl;
-              break;
+                bool check = sll.isEmpty();
+                if(check) cout<<"List is empty!"<<endl;
+                else cout<<"List is not empty!"<<endl;
+                break;
             }
         case 3:
             {
-              sll.pushFront(t->operations[i][1]);
-              sll.printList();
-              break;
+                sll.pushFront(t->operations[i][1]);
+                sll.printList();
+                break;
             }
         case 4:
             {
-              sll.popFront();
-              sll.printList();
-              break;
+                sll.popFront();
+                sll.printList();
+                break;
             }
         case 5:
             {
-              sll.insertAfter(t->operations[i][1], t->operations[i][2]);
-              break;
+                sll.insertAfter(t->operations[i][1], t->operations[i][2]);
+                break;
             }
         case 6:
             {
-              int element = sll.getIndex(t->operations[i][1]);
-            		// cout<<"Element at index is: "<<element<<endl;
-            	break;
+                int element = sll.getIndex(t->operations[i][1]);
+		cout<<"Element at index is: "<<element<<endl;
+		break;
             }
         case 7:
             {
-              int element = sll.front();
-                // cout<<"Element at front is "<<element<<endl;
-		          break;
+                int element = sll.front();
+                cout<<"Element at front is "<<element<<endl;
+		break;
             }
         case 8:
             {
-              sll.reverse();
-              break;
+                sll.reverse();
+                break;
             }
         case 9:
             {
-              sll.erase(t->operations[i][1]);
-              break;
+                sll.erase(t->operations[i][1]);
+                break;
             }
         case 10:
             {
@@ -327,9 +326,6 @@ void testForwardList(struct testCase* t, int numThreads)
             }
         }
     }
-    cout<<endl;
-    cout<<"Final Singly linked list: "<<endl;
-    sll.printList();
 
 }
 
